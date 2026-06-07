@@ -24,7 +24,7 @@ export function DownloadButton({
   if (loading) {
     return (
       <span
-        className={`inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600/70 font-semibold text-white opacity-80 ${sizeClasses} ${className}`}
+        className={`inline-flex items-center justify-center gap-2 rounded-full bg-stone-900/80 font-medium text-white opacity-80 ${sizeClasses} ${className}`}
       >
         <DownloadIcon className={size === "sm" ? "h-4 w-4" : "h-5 w-5"} />
         Preparing download…
@@ -35,7 +35,7 @@ export function DownloadButton({
   if (!isReady || !downloadUrl) {
     return (
       <span
-        className={`inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-slate-800/80 font-semibold text-slate-400 ${sizeClasses} ${className}`}
+        className={`inline-flex items-center justify-center gap-2 rounded-full border border-stone-300 bg-stone-100 font-medium text-stone-500 ${sizeClasses} ${className}`}
         title={`${platformMeta.label} installer not hosted yet`}
       >
         {platformMeta.shortLabel} — coming soon
@@ -48,13 +48,13 @@ export function DownloadButton({
       <a
         href={downloadUrl}
         download={fileName ?? true}
-        className={`inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 font-semibold text-white shadow-lg shadow-indigo-600/30 transition hover:bg-indigo-500 hover:shadow-indigo-500/40 ${sizeClasses}`}
+        className={`inline-flex items-center justify-center gap-2 rounded-full bg-stone-900 font-medium text-white transition hover:bg-stone-800 ${sizeClasses}`}
       >
         <DownloadIcon className={size === "sm" ? "h-4 w-4" : "h-5 w-5"} />
         Download for {platformMeta.shortLabel}
       </a>
       {showMeta && fileName && (
-        <p className="mt-2 text-center text-xs text-slate-400">
+        <p className="mt-2 text-center text-xs text-stone-500">
           {fileName}
           {fileSize ? ` · ${formatBytes(fileSize)}` : ""}
         </p>

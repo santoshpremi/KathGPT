@@ -35,45 +35,41 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="border-t border-white/5 py-24">
+    <section id="faq" className="border-b border-stone-200 bg-white py-24">
       <div className="mx-auto max-w-3xl px-6">
         <div className="text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-indigo-400">
-            FAQ
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
-            Frequently asked questions
-          </h2>
+          <p className="section-label">FAQ</p>
+          <h2 className="section-title mt-3">Frequently asked questions</h2>
         </div>
 
-        <dl className="mt-12 space-y-3">
+        <dl className="mt-12 space-y-2">
           {faqs.map((item, index) => {
             const isOpen = openIndex === index;
 
             return (
               <div
                 key={item.q}
-                className={`rounded-2xl border transition ${
+                className={`rounded-xl border transition ${
                   isOpen
-                    ? "border-indigo-500/30 bg-slate-900/60"
-                    : "border-white/5 bg-slate-900/30 hover:border-white/10"
+                    ? "border-stone-300 bg-stone-50"
+                    : "border-stone-200 bg-white hover:border-stone-300"
                 }`}
               >
                 <dt>
                   <button
                     type="button"
-                    className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
                     onClick={() => setOpenIndex(isOpen ? null : index)}
                     aria-expanded={isOpen}
                   >
-                    <span className="font-semibold text-white">{item.q}</span>
+                    <span className="font-medium text-stone-900">{item.q}</span>
                     <ChevronIcon
-                      className={`h-5 w-5 shrink-0 text-slate-500 transition ${isOpen ? "rotate-180" : ""}`}
+                      className={`h-5 w-5 shrink-0 text-stone-400 transition ${isOpen ? "rotate-180" : ""}`}
                     />
                   </button>
                 </dt>
                 {isOpen && (
-                  <dd className="border-t border-white/5 px-6 pb-5 pt-1 text-sm leading-relaxed text-slate-400">
+                  <dd className="border-t border-stone-200 px-5 pb-4 pt-1 text-sm leading-relaxed text-stone-600">
                     {item.a}
                   </dd>
                 )}

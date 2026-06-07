@@ -20,66 +20,66 @@ export function MacOSInstallHelp() {
   };
 
   return (
-    <div className="mx-auto mt-10 max-w-2xl rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6 text-left">
-      <h3 className="text-lg font-semibold text-amber-100">
+    <div className="surface-card mx-auto mt-10 max-w-2xl p-6 text-left">
+      <h3 className="text-lg font-semibold text-stone-900">
         macOS blocked the app?
       </h3>
-      <p className="mt-2 text-sm leading-relaxed text-slate-300">
+      <p className="mt-2 text-sm leading-relaxed text-stone-600">
         Browsers mark downloaded apps with a quarantine flag. Apple shows
         &ldquo;could not verify&rdquo; until you clear it. This is normal for
         open-source apps without a paid Apple notarization certificate.
       </p>
 
-      <p className="mt-4 text-sm font-medium text-white">
+      <p className="mt-4 text-sm font-medium text-stone-900">
         Option A — one Terminal command (recommended)
       </p>
-      <ol className="mt-2 list-inside list-decimal space-y-1 text-sm text-slate-400">
+      <ol className="mt-2 list-inside list-decimal space-y-1 text-sm text-stone-600">
         <li>Download the .dmg above (keep it in Downloads)</li>
         <li>Open Terminal, paste this, press Enter:</li>
       </ol>
       <div className="relative mt-2">
-        <pre className="overflow-x-auto rounded-xl border border-white/10 bg-black/40 p-4 text-xs leading-relaxed text-emerald-200/90">
+        <pre className="overflow-x-auto rounded-xl border border-stone-200 bg-stone-50 p-4 text-xs leading-relaxed text-stone-800">
           {INSTALL_SCRIPT}
         </pre>
         <button
           type="button"
           onClick={() => void copy(INSTALL_SCRIPT, "script")}
-          className="absolute right-3 top-3 rounded-lg bg-white/10 px-3 py-1 text-xs font-medium text-white hover:bg-white/20"
+          className="absolute right-3 top-3 rounded-lg border border-stone-200 bg-white px-3 py-1 text-xs font-medium text-stone-700 hover:bg-stone-50"
         >
           {copied === "script" ? "Copied!" : "Copy"}
         </button>
       </div>
 
-      <p className="mt-5 text-sm font-medium text-white">
+      <p className="mt-5 text-sm font-medium text-stone-900">
         Option B — already dragged to Applications?
       </p>
-      <p className="mt-1 text-sm text-slate-400">
+      <p className="mt-1 text-sm text-stone-600">
         Run this in Terminal, then open KathGPT again:
       </p>
       <div className="relative mt-2">
-        <pre className="overflow-x-auto rounded-xl border border-white/10 bg-black/40 p-3 text-xs text-emerald-200/90">
+        <pre className="overflow-x-auto rounded-xl border border-stone-200 bg-stone-50 p-3 text-xs text-stone-800">
           {QUICK_FIX}
         </pre>
         <button
           type="button"
           onClick={() => void copy(QUICK_FIX, "quick")}
-          className="absolute right-3 top-3 rounded-lg bg-white/10 px-3 py-1 text-xs font-medium text-white hover:bg-white/20"
+          className="absolute right-3 top-3 rounded-lg border border-stone-200 bg-white px-3 py-1 text-xs font-medium text-stone-700 hover:bg-stone-50"
         >
           {copied === "quick" ? "Copied!" : "Copy"}
         </button>
       </div>
 
-      <p className="mt-5 text-sm font-medium text-white">Option C — manual</p>
-      <p className="mt-1 text-sm text-slate-400">
-        Right-click <strong className="text-slate-300">KathGPT.app</strong> in
-        Applications → <strong className="text-slate-300">Open</strong> →{" "}
-        <strong className="text-slate-300">Open</strong> again.
+      <p className="mt-5 text-sm font-medium text-stone-900">Option C — manual</p>
+      <p className="mt-1 text-sm text-stone-600">
+        Right-click <strong className="text-stone-800">KathGPT.app</strong> in
+        Applications → <strong className="text-stone-800">Open</strong> →{" "}
+        <strong className="text-stone-800">Open</strong> again.
       </p>
 
       <a
         href={assetUrl("downloads/install-macos.sh")}
         download="install-macos.sh"
-        className="mt-4 inline-flex text-sm font-medium text-indigo-400 hover:underline"
+        className="mt-4 inline-flex text-sm font-medium text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-500"
       >
         Download install script →
       </a>

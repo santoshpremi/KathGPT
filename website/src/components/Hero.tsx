@@ -3,25 +3,18 @@ import { SITE } from "../lib/site";
 
 export function Hero() {
   return (
-    <section className="hero-glow relative overflow-hidden pt-28 pb-20 md:pt-36 md:pb-28">
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#ffffff06_1px,transparent_1px),linear-gradient(to_bottom,#ffffff06_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,#000_65%,transparent_100%)]" />
-
-      <div className="relative mx-auto max-w-6xl px-6">
+    <section className="border-b border-stone-200 bg-white pt-28 pb-20 md:pt-36 md:pb-28">
+      <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-4 py-1.5 text-sm text-indigo-200">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-indigo-400" />
-            </span>
-            Open source · Rust backend · Local Edition v0.1
-          </div>
+          <p className="section-label">Open source desktop app</p>
 
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
-            Private AI workspace,{" "}
-            <span className="text-gradient">built for your desktop</span>
+          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl md:text-6xl lg:text-[4.25rem] lg:leading-[1.05]">
+            Private AI workspace,
+            <br />
+            built for your desktop
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400 md:text-xl">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-stone-600 md:text-xl">
             {SITE.description}
           </p>
 
@@ -29,7 +22,7 @@ export function Hero() {
             <DownloadButton size="lg" showMeta className="min-w-[260px]" />
           </div>
 
-          <p className="mt-6 text-sm text-slate-500">
+          <p className="mt-6 text-sm text-stone-500">
             macOS · Windows · Linux · {SITE.license} License
           </p>
         </div>

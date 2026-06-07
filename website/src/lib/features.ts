@@ -10,7 +10,6 @@ export interface ProductFeature {
   description: string;
   bullets: string[];
   image: string;
-  accent: string;
 }
 
 export const PRODUCT_FEATURES: ProductFeature[] = [
@@ -27,7 +26,6 @@ export const PRODUCT_FEATURES: ProductFeature[] = [
       "Prompt library and reusable workflows",
     ],
     image: assetUrl("images/chat.png"),
-    accent: "from-indigo-500/20 to-violet-500/10",
   },
   {
     id: "image",
@@ -42,7 +40,6 @@ export const PRODUCT_FEATURES: ProductFeature[] = [
       "History and one-click download",
     ],
     image: assetUrl("images/image-generator.png"),
-    accent: "from-fuchsia-500/20 to-pink-500/10",
   },
   {
     id: "research",
@@ -57,7 +54,6 @@ export const PRODUCT_FEATURES: ProductFeature[] = [
       "Tab history for parallel research threads",
     ],
     image: assetUrl("images/research.png"),
-    accent: "from-cyan-500/20 to-blue-500/10",
   },
   {
     id: "translation",
@@ -72,6 +68,5 @@ export const PRODUCT_FEATURES: ProductFeature[] = [
       "Save as… with native file picker",
     ],
     image: assetUrl("images/translation.png"),
-    accent: "from-emerald-500/20 to-teal-500/10",
   },
 ];

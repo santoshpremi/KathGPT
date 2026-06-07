@@ -14,16 +14,16 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-stone-200/80 bg-white/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         <Logo />
 
-        <nav className="hidden items-center gap-7 md:flex">
+        <nav className="hidden items-center gap-8 md:flex">
           {links.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm text-slate-400 transition hover:text-white"
+              className="text-sm text-stone-600 transition hover:text-stone-900"
             >
               {link.label}
             </a>
@@ -35,14 +35,14 @@ export function Header() {
             href={`https://github.com/${SITE.githubRepo}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white sm:inline-flex"
+            className="hidden items-center gap-2 rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:text-stone-900 sm:inline-flex"
           >
             <GitHubIcon className="h-4 w-4" />
             GitHub
           </a>
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 text-slate-300 md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-stone-200 text-stone-600 md:hidden"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-label="Toggle menu"
@@ -53,13 +53,13 @@ export function Header() {
       </div>
 
       {open && (
-        <nav className="border-t border-white/5 bg-slate-950/95 px-6 py-4 md:hidden">
+        <nav className="border-t border-stone-200 bg-white px-6 py-4 md:hidden">
           <ul className="space-y-1">
             {links.map((link) => (
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className="block rounded-lg px-3 py-2.5 text-sm text-slate-300 hover:bg-white/5 hover:text-white"
+                  className="block rounded-lg px-3 py-2.5 text-sm text-stone-700 hover:bg-stone-50 hover:text-stone-900"
                   onClick={() => setOpen(false)}
                 >
                   {link.label}
@@ -72,7 +72,7 @@ export function Header() {
               href={`https://github.com/${SITE.githubRepo}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white"
+              className="flex w-full items-center justify-center gap-2 rounded-full border border-stone-300 bg-white px-4 py-3 text-sm font-medium text-stone-700 transition hover:border-stone-400"
               onClick={() => setOpen(false)}
             >
               <GitHubIcon className="h-4 w-4" />

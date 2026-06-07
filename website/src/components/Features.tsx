@@ -51,32 +51,30 @@ const features = [
 
 export function Features() {
   return (
-    <section id="features" className="border-t border-white/5 py-24">
+    <section id="features" className="border-b border-stone-200 bg-white py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-indigo-400">
-            Why KathGPT
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
+          <p className="section-label">Why KathGPT</p>
+          <h2 className="section-title mt-3">
             Everything you need, nothing you don&apos;t
           </h2>
-          <p className="mt-4 text-lg text-slate-400">
+          <p className="section-body mt-4">
             KathGPT Local Edition is built for individuals who want powerful AI
             without giving up ownership of their data.
           </p>
         </div>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature) => (
             <article
               key={feature.title}
-              className="group rounded-2xl border border-white/5 bg-slate-900/40 p-6 transition hover:border-indigo-500/30 hover:bg-slate-900/60"
+              className="surface-card p-6 transition hover:border-stone-300"
             >
-              <div className="mb-4 inline-flex rounded-xl bg-indigo-500/10 p-3 text-indigo-400 ring-1 ring-indigo-500/20 transition group-hover:bg-indigo-500/20">
+              <div className="mb-4 inline-flex rounded-xl border border-stone-200 bg-stone-50 p-3 text-stone-700">
                 <feature.icon className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-semibold text-white">{feature.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-400">
+              <h3 className="text-lg font-semibold text-stone-900">{feature.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-stone-600">
                 {feature.description}
               </p>
             </article>

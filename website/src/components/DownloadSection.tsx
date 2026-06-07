@@ -27,16 +27,12 @@ export function DownloadSection() {
   }, []);
 
   return (
-    <section id="download" className="border-t border-white/5 py-20">
+    <section id="download" className="border-b border-stone-200 bg-stone-50 py-20">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-indigo-400">
-            Get started
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
-            Download KathGPT
-          </h2>
-          <p className="mt-4 text-lg text-slate-400">
+          <p className="section-label">Get started</p>
+          <h2 className="section-title mt-3">Download KathGPT</h2>
+          <p className="section-body mt-4">
             Click below — the installer downloads directly from this site. No
             GitHub detour.
           </p>
@@ -62,10 +58,10 @@ export function DownloadSection() {
                 key={p.id}
                 href={href!}
                 download
-                className="flex items-center justify-between rounded-xl border border-indigo-500/40 bg-indigo-500/10 px-5 py-4 text-sm text-white transition hover:border-indigo-400/60 hover:bg-indigo-500/20"
+                className="flex items-center justify-between rounded-xl border border-stone-200 bg-white px-5 py-4 text-sm text-stone-900 transition hover:border-stone-300"
               >
-                <span className="font-semibold">{p.label}</span>
-                <span className="rounded-lg bg-indigo-600 px-3 py-1 text-xs font-medium">
+                <span className="font-medium">{p.label}</span>
+                <span className="rounded-full bg-stone-900 px-3 py-1 text-xs font-medium text-white">
                   Download
                   {releaseAsset ? ` · ${formatBytes(releaseAsset.size)}` : ""}
                 </span>
@@ -73,7 +69,7 @@ export function DownloadSection() {
             ) : (
               <div
                 key={p.id}
-                className="flex items-center justify-between rounded-xl border border-white/5 bg-slate-900/30 px-5 py-4 text-sm text-slate-500"
+                className="flex items-center justify-between rounded-xl border border-stone-200 bg-white px-5 py-4 text-sm text-stone-500"
               >
                 <span className="font-medium">{p.label}</span>
                 <span className="text-xs">Coming soon</span>
@@ -82,31 +78,31 @@ export function DownloadSection() {
           })}
         </div>
 
-        <div className="mx-auto mt-12 max-w-2xl rounded-xl border border-white/5 bg-slate-900/30 p-6">
-          <h3 className="font-semibold text-white">System requirements</h3>
-          <ul className="mt-3 space-y-2 text-sm text-slate-400">
+        <div className="surface-card mx-auto mt-12 max-w-2xl p-6">
+          <h3 className="font-semibold text-stone-900">System requirements</h3>
+          <ul className="mt-3 space-y-2 text-sm text-stone-600">
             <li>
-              <strong className="text-slate-300">macOS:</strong> 11+ (Apple Silicon
+              <strong className="text-stone-800">macOS:</strong> 11+ (Apple Silicon
               — download above; Intel build coming soon)
             </li>
             <li>
-              <strong className="text-slate-300">Windows:</strong> 10+ (64-bit)
+              <strong className="text-stone-800">Windows:</strong> 10+ (64-bit)
             </li>
             <li>
-              <strong className="text-slate-300">Linux:</strong> Ubuntu 20.04+
+              <strong className="text-stone-800">Linux:</strong> Ubuntu 20.04+
             </li>
             <li>
-              <strong className="text-slate-300">API key:</strong> OpenRouter
+              <strong className="text-stone-800">API key:</strong> OpenRouter
               recommended
             </li>
           </ul>
         </div>
 
-        <p className="mt-8 text-center text-sm text-slate-500">
+        <p className="mt-8 text-center text-sm text-stone-500">
           Open source · {SITE.license}.{" "}
           <a
             href={`https://github.com/${SITE.githubRepo}/blob/main/README.md`}
-            className="text-indigo-400 hover:underline"
+            className="text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-500"
           >
             Build other platforms from source
           </a>

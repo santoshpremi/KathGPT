@@ -31,16 +31,14 @@ const stack = [
 
 export function TechStack() {
   return (
-    <section id="tech" className="border-t border-white/5 py-24">
+    <section id="tech" className="border-b border-stone-200 bg-stone-50 py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-orange-400">
-            Powered by Rust
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
+          <p className="section-label">Powered by Rust</p>
+          <h2 className="section-title mt-3">
             Performance you can feel, privacy you can trust
           </h2>
-          <p className="mt-4 text-lg text-slate-400">
+          <p className="section-body mt-4">
             KathGPT replaced a Node.js backend with a single Rust core — embedded in
             the desktop app and bound to localhost. Less overhead, faster I/O, same
             powerful AI features.
@@ -49,34 +47,31 @@ export function TechStack() {
 
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {rustBenefits.map((item) => (
-            <article
-              key={item.title}
-              className="rounded-2xl border border-orange-500/10 bg-gradient-to-b from-orange-500/5 to-slate-900/40 p-5"
-            >
-              <h3 className="font-semibold text-white">{item.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-400">
+            <article key={item.title} className="surface-card p-5">
+              <h3 className="font-semibold text-stone-900">{item.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-stone-600">
                 {item.description}
               </p>
             </article>
           ))}
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
           {stack.map((item) => (
             <span
               key={item.label}
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-900/60 px-4 py-2 text-sm"
+              className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm"
             >
-              <span className="font-medium text-slate-300">{item.label}</span>
-              <span className="text-slate-500">·</span>
-              <span className="text-slate-400">{item.value}</span>
+              <span className="font-medium text-stone-800">{item.label}</span>
+              <span className="text-stone-300">·</span>
+              <span className="text-stone-500">{item.value}</span>
             </span>
           ))}
         </div>
 
-        <div className="mx-auto mt-12 max-w-2xl rounded-2xl border border-white/5 bg-slate-900/50 p-6 text-center">
-          <p className="text-sm text-slate-400">
-            <span className="font-semibold text-white">vs. Electron-style apps:</span>{" "}
+        <div className="surface-card mx-auto mt-12 max-w-2xl p-6 text-center">
+          <p className="text-sm text-stone-600">
+            <span className="font-semibold text-stone-900">vs. Electron-style apps:</span>{" "}
             Tauri + Rust means a smaller download, lower RAM use, and a backend that
             starts instantly — while still shipping a full React interface.
           </p>

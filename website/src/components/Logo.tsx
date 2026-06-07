@@ -6,9 +6,9 @@ export function Logo({ className = "" }: { className?: string }) {
       <img
         src={assetUrl("logo.svg")}
         alt={`${SITE.name} logo`}
-        className="h-9 w-9 rounded-[14px] shadow-lg shadow-cyan-500/25"
+        className="h-8 w-8 rounded-xl"
       />
-      <span className="bg-gradient-to-r from-white via-cyan-100 to-emerald-200 bg-clip-text text-lg font-bold tracking-tight text-transparent">
+      <span className="text-lg font-semibold tracking-tight text-stone-900">
         {SITE.name}
       </span>
     </a>

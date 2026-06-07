@@ -19,42 +19,32 @@ export function ProductShowcase() {
     PRODUCT_FEATURES.find((f) => f.id === active) ?? PRODUCT_FEATURES[0];
 
   return (
-    <section id="product" className="relative border-t border-white/5 py-24 md:py-32">
-      <div className="pointer-events-none absolute inset-0 section-glow" />
-
-      <div className="relative mx-auto max-w-6xl px-6">
+    <section id="product" className="border-b border-stone-200 bg-white py-24 md:py-32">
+      <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-indigo-400">
-            See it in action
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-5xl">
+          <p className="section-label">Product</p>
+          <h2 className="section-title mt-3 md:text-5xl">
             One app. Four powerful tools.
           </h2>
-          <p className="mt-4 text-lg text-slate-400">
+          <p className="section-body mt-4">
             Chat, generate images, research with citations, and translate whole
             documents — all in a native desktop workspace that keeps your data local.
           </p>
         </div>
 
-        <div className="mt-14 lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:gap-10">
-          <div className="relative">
-            <div
-              className={`pointer-events-none absolute -inset-4 rounded-3xl bg-gradient-to-br opacity-60 blur-2xl transition-colors duration-500 ${feature.accent}`}
-              aria-hidden
-            />
-            <AppWindow
-              image={feature.image}
-              alt={`KathGPT ${feature.label} screenshot`}
-              className="relative transition-opacity duration-300"
-              priority={active === "chat"}
-            />
-          </div>
+        <div className="mt-14 lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-12">
+          <AppWindow
+            image={feature.image}
+            alt={`KathGPT ${feature.label} screenshot`}
+            className="shadow-product"
+            priority={active === "chat"}
+          />
 
           <FeaturePanel feature={feature} />
         </div>
 
         <nav
-          className="mx-auto mt-10 flex max-w-3xl flex-wrap items-center justify-center gap-2 rounded-2xl border border-white/10 bg-slate-900/60 p-2 backdrop-blur"
+          className="mx-auto mt-10 flex max-w-3xl flex-wrap items-center justify-center gap-1 rounded-full border border-stone-200 bg-stone-50 p-1"
           aria-label="Product features"
         >
           {PRODUCT_FEATURES.map((item) => {
@@ -66,10 +56,10 @@ export function ProductShowcase() {
                 key={item.id}
                 type="button"
                 onClick={() => setActive(item.id)}
-                className={`inline-flex flex-1 min-w-[120px] items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition ${
+                className={`inline-flex min-w-[120px] flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium transition ${
                   isActive
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/25"
-                    : "text-slate-400 hover:bg-white/5 hover:text-white"
+                    ? "bg-white text-stone-900 shadow-soft"
+                    : "text-stone-500 hover:text-stone-800"
                 }`}
                 aria-pressed={isActive}
               >
@@ -88,21 +78,16 @@ export function ProductShowcase() {
 function FeaturePanel({ feature }: { feature: ProductFeature }) {
   return (
     <div className="mt-10 lg:mt-0">
-      <div className="rounded-2xl border border-white/10 bg-slate-900/50 p-6 backdrop-blur lg:sticky lg:top-24">
-        <p className="text-xs font-semibold uppercase tracking-wider text-indigo-400">
-          {feature.label}
-        </p>
-        <h3 className="mt-2 text-xl font-bold text-white">{feature.title}</h3>
-        <p className="mt-3 text-sm leading-relaxed text-slate-400">
+      <div className="surface-card p-6 lg:sticky lg:top-24">
+        <p className="section-label">{feature.label}</p>
+        <h3 className="mt-2 text-xl font-semibold text-stone-900">{feature.title}</h3>
+        <p className="mt-3 text-sm leading-relaxed text-stone-600">
           {feature.description}
         </p>
         <ul className="mt-5 space-y-3">
           {feature.bullets.map((bullet) => (
-            <li
-              key={bullet}
-              className="flex gap-3 text-sm text-slate-300"
-            >
-              <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
+            <li key={bullet} className="flex gap-3 text-sm text-stone-700">
+              <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-stone-400" />
               <span>{bullet}</span>
             </li>
           ))}

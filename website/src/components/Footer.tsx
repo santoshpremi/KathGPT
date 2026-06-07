@@ -5,27 +5,27 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-white/5 py-12">
+    <footer className="border-t border-stone-200 bg-white py-12">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 md:flex-row">
         <Logo />
-        <nav className="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
-          <a href="#product" className="hover:text-white">
+        <nav className="flex flex-wrap justify-center gap-6 text-sm text-stone-500">
+          <a href="#product" className="hover:text-stone-900">
             Product
           </a>
-          <a href="#tech" className="hover:text-white">
+          <a href="#tech" className="hover:text-stone-900">
             Rust
           </a>
-          <a href="#features" className="hover:text-white">
+          <a href="#features" className="hover:text-stone-900">
             Features
           </a>
-          <a href="#download" className="hover:text-white">
+          <a href="#download" className="hover:text-stone-900">
             Download
           </a>
           <a
             href={`https://github.com/${SITE.githubRepo}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-white"
+            className="hover:text-stone-900"
           >
             GitHub
           </a>
@@ -33,12 +33,12 @@ export function Footer() {
             href={`https://github.com/${SITE.githubRepo}/blob/main/LICENSE`}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-white"
+            className="hover:text-stone-900"
           >
             License
           </a>
         </nav>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-stone-500">
           © {year} {SITE.name}. All rights reserved.
         </p>
       </div>
