@@ -1,6 +1,6 @@
 import { assetUrl } from "./site";
 
-export type FeatureId = "chat" | "image" | "research" | "translation";
+export type FeatureId = "chat" | "image" | "research" | "translation" | "meeting";
 
 export interface ProductFeature {
   id: FeatureId;
@@ -25,7 +25,7 @@ export const PRODUCT_FEATURES: ProductFeature[] = [
       "Document uploads with drag-and-drop",
       "Prompt library and reusable workflows",
     ],
-    image: assetUrl("images/chat.png"),
+    image: assetUrl("images/chats.png"),
   },
   {
     id: "image",
@@ -53,7 +53,7 @@ export const PRODUCT_FEATURES: ProductFeature[] = [
       "Summary, key points, and detailed sections",
       "Tab history for parallel research threads",
     ],
-    image: assetUrl("images/research.png"),
+    image: assetUrl("images/Research-assis.png"),
   },
   {
     id: "translation",
@@ -67,6 +67,20 @@ export const PRODUCT_FEATURES: ProductFeature[] = [
       "Side-by-side scrollable previews",
       "Save as… with native file picker",
     ],
-    image: assetUrl("images/translation.png"),
+    image: assetUrl("images/Translate.png"),
+  },
+  {
+    id: "meeting",
+    label: "Meeting tools",
+    shortLabel: "Meetings",
+    title: "Turn meeting notes into action",
+    description:
+      "Paste a transcript or rough notes, then summarize the discussion or pull out action items with AI — without sending your data to a cloud workspace.",
+    bullets: [
+      "Summarize long transcripts in seconds",
+      "Extract owners, deadlines, and next steps",
+      "Dedicated tool workspace with chat history",
+    ],
+    image: assetUrl("images/Meeting-tools.png"),
   },
 ];

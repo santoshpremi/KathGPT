@@ -11,6 +11,7 @@ const TAB_ICONS: Record<FeatureId, (props: { className?: string }) => JSX.Elemen
   image: ImageIcon,
   research: ResearchIcon,
   translation: TranslateIcon,
+  meeting: MeetingIcon,
 };
 
 export function ProductShowcase() {
@@ -24,11 +25,12 @@ export function ProductShowcase() {
         <div className="mx-auto max-w-3xl text-center">
           <p className="section-label">Product</p>
           <h2 className="section-title mt-3 md:text-5xl">
-            One app. Four powerful tools.
+            One app. Five powerful tools.
           </h2>
           <p className="section-body mt-4">
-            Chat, generate images, research with citations, and translate whole
-            documents — all in a native desktop workspace that keeps your data local.
+            Chat, generate images, research with citations, translate whole
+            documents, and process meeting notes — all in a native desktop
+            workspace that keeps your data local.
           </p>
         </div>
 
@@ -133,6 +135,14 @@ function TranslateIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 016-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 01-3.827-5.802" />
+    </svg>
+  );
+}
+
+function MeetingIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.065 6.065 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
     </svg>
   );
 }
