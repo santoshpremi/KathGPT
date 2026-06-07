@@ -33,9 +33,24 @@ pub async fn init_pool() -> anyhow::Result<SqlitePool> {
 }
 
 async fn run_migrations(pool: &SqlitePool) -> anyhow::Result<()> {
-    let migration_sql = include_str!("../../../migrations/001_initial.sql");
+    apply_migration_file(pool, 1, include_str!("../../../migrations/001_initial.sql")).await?;
+    apply_migration_file(pool, 2, include_str!("../../../migrations/002_documents.sql")).await?;
+    info!("SQLite migrations applied");
+    Ok(())
+}
 
-    for statement in migration_sql.split(';') {
+async fn apply_migration_file(pool: &SqlitePool, version: i64, sql_file: &str) -> anyhow::Result<()> {
+    let applied: Option<i64> =
+        sqlx::query_scalar("SELECT version FROM schema_migrations WHERE version = ?")
+            .bind(version)
+            .fetch_optional(pool)
+            .await?;
+
+    if applied.is_some() {
+        return Ok(());
+    }
+
+    for statement in sql_file.split(';') {
         let sql = statement.trim();
         if sql.is_empty() || sql.starts_with("--") {
             continue;
@@ -44,11 +59,11 @@ async fn run_migrations(pool: &SqlitePool) -> anyhow::Result<()> {
     }
 
     sqlx::query(
-        "INSERT OR IGNORE INTO schema_migrations (version, applied_at) VALUES (1, datetime('now'))",
+        "INSERT INTO schema_migrations (version, applied_at) VALUES (?, datetime('now'))",
     )
+    .bind(version)
     .execute(pool)
     .await?;
 
-    info!("SQLite migrations applied");
     Ok(())
 }

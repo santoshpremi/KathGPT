@@ -183,7 +183,11 @@ export function TextMessage({
         }}
       >
         <div>
-          <Typography color="neutral" component="div">
+          <Typography
+            color="neutral"
+            component="div"
+            sx={{ fontFamily: "inherit", "& p": { fontFamily: "inherit" } }}
+          >
             {editing && (
               <MessageEditor
                 editedContent={editedContent}

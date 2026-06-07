@@ -11,9 +11,10 @@ default-run = "kathgpt-local"
 default = []
 api-server-cli = []
 
-[[bin]]
+# Dev-only API server — use [[example]] so Tauri does not bundle it into KathGPT.app
+[[example]]
 name = "api-server"
-path = "src/bin/api-server.rs"
+path = "examples/api-server.rs"
 required-features = ["api-server-cli"]
 
 [lib]
@@ -49,6 +50,8 @@ base64 = "0.22"
 rand = "0.8"
 keyring = "3"
 pdf-extract = "0.10"
+printpdf = "0.7"
+rfd = "0.15"
 
 [profile.release]
 panic = "abort"

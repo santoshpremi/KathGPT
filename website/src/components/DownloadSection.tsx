@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { DownloadButton } from "./DownloadButton";
+import { MacOSInstallHelp } from "./MacOSInstallHelp";
 import {
   fetchDownloadManifest,
   formatBytes,
@@ -41,6 +42,8 @@ export function DownloadSection() {
         <div className="mx-auto mt-10 flex flex-col items-center">
           <DownloadButton size="lg" showMeta className="w-full max-w-md" />
         </div>
+
+        <MacOSInstallHelp />
 
         <div className="mx-auto mt-10 grid max-w-3xl gap-3 sm:grid-cols-2">
           {PLATFORMS.map((p) => {

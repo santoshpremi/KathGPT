@@ -36,9 +36,9 @@ app-icon.png
 # Legacy backend env (removed Node server)
 backend/.env
 
-# Legacy Node stubs (pre–local edition migration)
-api/
-frontend/
+# Legacy Node stubs at repo root only (pre–local edition migration)
+/api/
+/frontend/
 test-server.js
 
 # Generated / vendored assets at repo root (not src/assets)

@@ -38,20 +38,40 @@ struct StatusResponse {
     ready: bool,
 }
 
+const PORT_SCAN_RANGE: u16 = 10;
+
 pub async fn start(state: AppState) -> anyhow::Result<u16> {
     let app = build_router(state);
-    let addr = SocketAddr::from(([127, 0, 0, 1], DEFAULT_API_PORT));
-    let listener = tokio::net::TcpListener::bind(addr).await?;
-    let port = listener.local_addr()?.port();
-    info!("KathGPT local API listening on http://127.0.0.1:{port}");
 
-    tokio::spawn(async move {
-        if let Err(err) = axum::serve(listener, app).await {
-            tracing::error!("API server error: {err}");
-        }
-    });
+    for offset in 0..PORT_SCAN_RANGE {
+        let port = DEFAULT_API_PORT.saturating_add(offset);
+        let addr = SocketAddr::from(([127, 0, 0, 1], port));
+        let listener = match tokio::net::TcpListener::bind(addr).await {
+            Ok(listener) => listener,
+            Err(err) if err.kind() == std::io::ErrorKind::AddrInUse => {
+                tracing::warn!("Port {port} in use, trying next");
+                continue;
+            }
+            Err(err) => return Err(err.into()),
+        };
 
-    Ok(port)
+        let bound_port = listener.local_addr()?.port();
+        info!("KathGPT local API listening on http://127.0.0.1:{bound_port}");
+
+        tokio::spawn(async move {
+            if let Err(err) = axum::serve(listener, app).await {
+                tracing::error!("API server error: {err}");
+            }
+        });
+
+        return Ok(bound_port);
+    }
+
+    anyhow::bail!(
+        "No free port in range {}-{}",
+        DEFAULT_API_PORT,
+        DEFAULT_API_PORT + PORT_SCAN_RANGE - 1
+    )
 }
 
 pub fn build_router(state: AppState) -> Router {

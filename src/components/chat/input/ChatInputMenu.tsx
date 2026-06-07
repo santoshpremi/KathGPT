@@ -32,6 +32,7 @@ interface ChatInputMenuProps {
   ragEnabled: boolean;
   imageGenerationEnabled: boolean;
   onUploadFiles: () => void;
+  onUploadFolder?: () => void;
   onOpenSources: () => void;
   onInsertPrompt: (prompt: string) => void;
 }
@@ -41,6 +42,7 @@ export function ChatInputMenu({
   ragEnabled,
   imageGenerationEnabled,
   onUploadFiles,
+  onUploadFolder,
   onOpenSources,
   onInsertPrompt,
 }: ChatInputMenuProps) {
@@ -86,6 +88,20 @@ export function ChatInputMenu({
           </ListItemDecorator>
           {t("chat.inputMenu.uploadFiles")}
         </MenuItem>
+
+        {onUploadFolder && (
+          <MenuItem
+            disabled={!fileUploadEnabled}
+            onClick={() => {
+              if (fileUploadEnabled) onUploadFolder();
+            }}
+          >
+            <ListItemDecorator>
+              <AttachFile fontSize="small" />
+            </ListItemDecorator>
+            {t("chat.inputMenu.uploadFolder", "Upload folder")}
+          </MenuItem>
+        )}
 
         <MenuItem
           onClick={() => {

@@ -19,6 +19,7 @@ import {
   listMessages,
   RustApiError,
   useChat,
+  useChatList,
   useChatMessages,
   useCreateChat,
   useDeleteChat,
@@ -27,6 +28,8 @@ import {
   useSendMessageStream,
   useUpdateChat,
 } from "../../lib/api/rust";
+import { useNavigate } from "../../router";
+import { useNewChat } from "../../lib/hooks/useNewChat";
 import { useDraftChatStore } from "../../lib/context/draftChatStore";
 import { getChat } from "../../lib/api/rust/chats";
 import { toAppChat } from "../../lib/api/rust/hooks/useChats";
@@ -112,6 +115,9 @@ function Interface({
 }: ChatInterfaceProps) {
   // State
   const [tempMessages, setTempMessages] = useState([] as Message[]);
+  const [localModelOverride, setLocalModelOverride] = useState<
+    ModelOverride | null | undefined
+  >(undefined);
   const [completed, setCompleted] = useState(true);
   const waitingForQueuedMessage = useRef<boolean>(false);
   const [progress, setProgress] = useState<
@@ -123,12 +129,17 @@ function Interface({
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const cancelFunctionRef = useRef<() => Promise<void>>();
+  const sendInFlightRef = useRef(false);
+  const pendingAiMessageIdRef = useRef<string | null>(null);
 
   // Hooks
   const { showArtifact, visible } = useArtifact();
   const { t, i18n } = useTranslation();
   const me = useMe();
   const organizationId = useCurrentOrganizationId();
+  const navigate = useNavigate();
+  const { startNewChat } = useNewChat();
+  const { data: chatsData } = useChatList(50, organizationId);
   const queryClient = useQueryClient();
   const mutateMessages = useCallback(() => {
     void queryClient.invalidateQueries({ queryKey: ["messages", chatId] });
@@ -147,13 +158,17 @@ function Interface({
   const isDraft = useDraftChatStore((s) => s.isDraft(chatId));
   const clearDraft = useDraftChatStore((s) => s.clearDraft);
 
+  useEffect(() => {
+    setLocalModelOverride(undefined);
+  }, [chatId]);
+
   // Mutations
   const { sendMessage: createMessageMutation } = useSendMessageStream();
   const { mutateAsync: createChat } = useCreateChat();
   const { mutateAsync: deleteChat } = useDeleteChat();
   const { mutateAsync: updateChat } = useUpdateChat();
   const abortMessageGenerationMutation = async () => {
-    abortActiveStream();
+    abortActiveStream(chatId);
     setCompleted(true);
     setProgress(undefined);
     setTempMessages([]);
@@ -168,7 +183,11 @@ function Interface({
     error: chatFetchError,
     isError: chatIsError,
   } = useChat(chatId, { enabled: !isDraft });
-  const { data: apiMessages } = useChatMessages(chatId);
+  const {
+    data: apiMessages,
+    isFetched: messagesFetched,
+    isError: messagesIsError,
+  } = useChatMessages(chatId);
 
   const draftChat = useMemo(
     (): Chat => ({
@@ -189,12 +208,37 @@ function Interface({
   );
 
   const ensureChatExists = useCallback(async () => {
-    if (chat) return;
-    await createChat({ id: chatId, name: null, organizationId });
+    const modelOverride =
+      localModelOverride !== undefined ? localModelOverride : null;
+
+    const created = await createChat({
+      id: chatId,
+      name: null,
+      organizationId,
+      modelOverride,
+    });
+    queryClient.setQueryData(
+      ["chats", chatId],
+      toAppChat(created, organizationId),
+    );
     clearDraft(chatId);
-    await queryClient.invalidateQueries({ queryKey: ["chats", chatId] });
-    await queryClient.invalidateQueries({ queryKey: ["chats"] });
-  }, [chat, chatId, clearDraft, createChat, organizationId, queryClient]);
+  }, [
+    chatId,
+    clearDraft,
+    createChat,
+    localModelOverride,
+    organizationId,
+    queryClient,
+  ]);
+
+  // Persisted chats must not stay in the draft list (stale sessionStorage breaks sends).
+  useEffect(() => {
+    if (!isDraft) return;
+    const inSidebar = chatsData?.items?.some((c) => c.id === chatId);
+    if (inSidebar || (apiMessages?.length ?? 0) > 0) {
+      clearDraft(chatId);
+    }
+  }, [isDraft, chatsData?.items, apiMessages?.length, chatId, clearDraft]);
 
   useEffect(() => {
     return () => {
@@ -203,11 +247,20 @@ function Interface({
           useDraftChatStore.getState().clearDraft(chatId);
           return;
         }
-        const messages = queryClient.getQueryData<Message[]>([
+        if (sendInFlightRef.current || pendingAiMessageIdRef.current) {
+          return;
+        }
+        const hasQueued = useQueuedMessagesStore
+          .getState()
+          .queuedMessages.some((m) => m.chatId === chatId);
+        if (hasQueued) return;
+
+        const messagesState = queryClient.getQueryState<Message[]>([
           "messages",
           chatId,
         ]);
-        if (messages && messages.length === 0) {
+        const messages = messagesState?.data;
+        if (messagesState?.status === "success" && messages?.length === 0) {
           try {
             await deleteChat({ chatId });
             void queryClient.invalidateQueries({ queryKey: ["chats"] });
@@ -251,6 +304,19 @@ function Interface({
     chatFetchError.status === 404;
 
   useEffect(() => {
+    if (!chatNotFound) return;
+
+    clearDraft(chatId);
+    useQueuedMessagesStore.setState({
+      queuedMessages: useQueuedMessagesStore
+        .getState()
+        .queuedMessages.filter((m) => m.chatId !== chatId),
+    });
+
+    void startNewChat();
+  }, [chatNotFound, chatId, clearDraft, startNewChat]);
+
+  useEffect(() => {
     const completedApiMessages =
       apiMessages?.filter((m) => m.responseCompleted || !m.fromAi) ?? [];
 
@@ -278,11 +344,28 @@ function Interface({
   }, [completed]);
 
   const setModelOverride = async (model: ModelOverride | null) => {
-    await updateChat({
-      chatId,
-      modelOverride: model,
-    });
-    void queryClient.invalidateQueries({ queryKey: ["chats", chatId] });
+    const stored =
+      model === "automatic" || model == null ? null : model;
+    setLocalModelOverride(stored);
+
+    if (isDraft && !chat) {
+      return;
+    }
+
+    try {
+      await updateChat({
+        chatId,
+        modelOverride: model,
+      });
+      queryClient.setQueryData(
+        ["chats", chatId],
+        (current: Chat | undefined) =>
+          current ? { ...current, modelOverride: stored } : current,
+      );
+      setLocalModelOverride(undefined);
+    } catch (error) {
+      handleGenericError(error, "modelUpdateFailed", { source: "chat" });
+    }
   };
 
   const cancelMessageGeneration = useCallback(async () => {
@@ -306,7 +389,9 @@ function Interface({
       outputFormat?: DocumentOutputFormat | null;
       workflowExecutionId?: string;
     }) => {
-      await ensureChatExists();
+      if (sendInFlightRef.current) return;
+      sendInFlightRef.current = true;
+
       const wasFirstMessage = (apiMessages?.length ?? 0) === 0;
       const isWorkflowOutput = outputFormat && workflowExecutionId;
       const promptTempMessages: Message[] = isWorkflowOutput
@@ -331,16 +416,6 @@ function Interface({
               outputDocumentUrl: null
             },
           ];
-
-      setProgress(undefined);
-      let mergedProgress = {};
-
-
-      onPrompt?.({
-        prompt: message,
-        messageHistory: [...(apiMessages ?? []), ...promptTempMessages],
-        attachmentIds,
-      });
 
       function getGenerationModel() {
         if (customModel == null) {
@@ -367,11 +442,21 @@ function Interface({
         outputDocumentUrl: isWorkflowOutput ? "LOADING" : undefined,
       };
 
+      setProgress(undefined);
+      pendingAiMessageIdRef.current = null;
       setTempMessages([...promptTempMessages, aiTempMessage]);
-
       setCompleted(false);
 
+      let mergedProgress = {};
+
+      onPrompt?.({
+        prompt: message,
+        messageHistory: [...(apiMessages ?? []), ...promptTempMessages],
+        attachmentIds,
+      });
+
       let cancelled = false;
+      const aiMessageId: { current: string | null } = { current: null };
 
       // this is the function that will be called when the user cancels the message generation
       cancelFunctionRef.current = async () => {
@@ -381,6 +466,7 @@ function Interface({
 
         setCompleted(true);
         waitingForQueuedMessage.current = false;
+        sendInFlightRef.current = false;
 
         // the AI message id should always be here, since the server sends it first thing in the response, if not, there is also no content we need to sync. If the user actually does manage to cancel before the package arrives, the message won't be marked as cancelled and when the user refreshes the page later the generated message will be displayed.
         aiMessageId.current && (await abortMessageGenerationMutation());
@@ -390,6 +476,9 @@ function Interface({
         if (wasFirstMessage) void syncChatTitle(message);
         setTempMessages([]);
       };
+
+      try {
+      await ensureChatExists();
 
       // this will be the package stream for the completion
       const res = await createMessageMutation({
@@ -407,11 +496,6 @@ function Interface({
       // here we accumulate the response from the incoming chunks
       let fullResponse = "";
 
-      // a ref to the AI message id, so we can cancel it if needed
-      const aiMessageId: {
-        current: string | null;
-      } = { current: null };
-
       // iterate over the chunks from the server
       for await (const chunk of res) {
         // if the user cancelled, break the loop
@@ -420,6 +504,7 @@ function Interface({
         // if the AI message id is in the chunk, set it and skip this packages since it is not a response
         if ("aiMessageId" in chunk) {
           aiMessageId.current = chunk.aiMessageId;
+          pendingAiMessageIdRef.current = chunk.aiMessageId;
           setTempMessages((currentTempMessages) =>
             currentTempMessages.map((m) =>
               m.fromAi
@@ -438,6 +523,10 @@ function Interface({
         if ("progress" in chunk) {
           mergedProgress = _.merge({}, mergedProgress, chunk.progress);
           setProgress(mergedProgress);
+          continue;
+        }
+
+        if ("streamDone" in chunk) {
           continue;
         }
 
@@ -461,11 +550,23 @@ function Interface({
       if (fullResponse.includes("<artifact>")) {
         showArtifact();
       }
-      mutateMessages();
-      setCompleted(true);
       if (wasFirstMessage) void syncChatTitle(message);
-      waitingForQueuedMessage.current = false;
-      setTempMessages([]);
+      } catch (error) {
+        if (!cancelled && error instanceof Error && error.name !== "AbortError") {
+          handleGenericError(error, "messageSendFailed", { source: "chat" });
+        }
+      } finally {
+        setCompleted(true);
+        waitingForQueuedMessage.current = false;
+        sendInFlightRef.current = false;
+        pendingAiMessageIdRef.current = null;
+        if (!cancelled) {
+          await queryClient.refetchQueries({ queryKey: ["messages", chatId] });
+          void queryClient.invalidateQueries({ queryKey: ["chats", chatId] });
+          void queryClient.invalidateQueries({ queryKey: ["chats"] });
+          setTempMessages([]);
+        }
+      }
     },
     [
       abortMessageGenerationMutation,
@@ -480,6 +581,7 @@ function Interface({
       customSystemPromptSuffix,
       syncChatTitle,
       ensureChatExists,
+      queryClient,
     ],
   );
 
@@ -602,51 +704,49 @@ function Interface({
   };
 
   useEffect(() => {
-    if (!chat && !isDraft) return;
+    if (!isDraft && chat === undefined) return;
+    if (chatIsError) return;
+    if (!completed) return;
     const filteredMessage = queuedMessages.find((m) => m.chatId === chatId);
     if (filteredMessage && !waitingForQueuedMessage.current) {
-      createMessage({
+      waitingForQueuedMessage.current = true;
+      shiftQueuedMessages(chatId);
+      void createMessage({
         message: filteredMessage.content,
         attachmentIds: filteredMessage.attachmentIds,
         customModel: filteredMessage.modelOverride,
         outputFormat: filteredMessage.outputFormat,
         workflowExecutionId: filteredMessage.workflowExecutionId,
       }).catch((e: Error) => {
-        // check if its this: DOMException: BodyStreamBuffer was aborted
+        waitingForQueuedMessage.current = false;
         if (e.name === "AbortError") return;
-
         handleGenericError(e, "messageSendFailed", { source: "chat" });
         console.error(e);
       });
-      waitingForQueuedMessage.current = true;
-      shiftQueuedMessages();
     }
   }, [
     queuedMessages.length,
     chat,
+    chatIsError,
     isDraft,
     chatId,
     createMessage,
     shiftQueuedMessages,
-    queuedMessages,
-    t,
     completed,
   ]);
 
-  const resolvedChat = (chat ?? (isDraft ? draftChat : undefined)) as
-    | Chat
-    | undefined;
+  const persistedChat = isDraft ? undefined : chat;
+  const resolvedChat = (persistedChat ?? draftChat) as Chat;
+  const messagesReady =
+    messagesFetched ||
+    tempMessages.length > 0 ||
+    !completed ||
+    messagesIsError;
   const chatName = maxStringLength(resolvedChat?.name ?? undefined, 80);
 
   const messagesList = useMemo(
     () =>
-      (apiMessages
-        ? [
-            ...apiMessages,
-            ...tempMessages.map((c) => ({ ...c, id: c.id + "temp" })),
-          ]
-        : []
-      ).sort(
+      [...(apiMessages ?? []), ...tempMessages.map((c) => ({ ...c, id: c.id + "temp" }))].sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       ),
@@ -660,9 +760,56 @@ function Interface({
     });
   }, [messagesList.length]);
 
-  if (chatNotFound) return <ChatNotFound />;
+  const recoverFromPersistedReply = useCallback(() => {
+    if (completed || tempMessages.length === 0) return false;
 
-  if (!resolvedChat || apiMessages === undefined)
+    const pendingAiId = pendingAiMessageIdRef.current;
+    if (pendingAiId) {
+      const saved = apiMessages?.find((m) => m.id === pendingAiId);
+      if (saved?.fromAi && saved.content.trim()) {
+        setTempMessages([]);
+        setCompleted(true);
+        sendInFlightRef.current = false;
+        waitingForQueuedMessage.current = false;
+        pendingAiMessageIdRef.current = null;
+        return true;
+      }
+    }
+
+    const sorted = [...(apiMessages ?? [])].sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    );
+    const last = sorted[sorted.length - 1];
+    const pendingUser = tempMessages.find((m) => !m.fromAi);
+    if (!pendingUser || !last?.fromAi || !last.content.trim()) return false;
+
+    setTempMessages([]);
+    setCompleted(true);
+    sendInFlightRef.current = false;
+    waitingForQueuedMessage.current = false;
+    pendingAiMessageIdRef.current = null;
+    return true;
+  }, [apiMessages, completed, tempMessages]);
+
+  // Recover when the server saved a reply but the live SSE stream dropped.
+  useEffect(() => {
+    recoverFromPersistedReply();
+  }, [recoverFromPersistedReply]);
+
+  useEffect(() => {
+    if (completed) return;
+    const poll = setInterval(() => {
+      void queryClient
+        .refetchQueries({ queryKey: ["messages", chatId] })
+        .then(() => recoverFromPersistedReply());
+    }, 1000);
+    return () => clearInterval(poll);
+  }, [completed, chatId, queryClient, recoverFromPersistedReply]);
+
+  if (chatNotFound) return <DelayedLoader />;
+
+  if (!messagesReady)
     return (
       <Sheet
         className={twMerge("relative h-full w-full")}
@@ -676,7 +823,7 @@ function Interface({
       </Sheet>
     );
 
-  const chatTokens = apiMessages.reduce((acc, m) => acc + m.tokens, 0);
+  const chatTokens = (apiMessages ?? []).reduce((acc, m) => acc + m.tokens, 0);
   const isEmptyChat = messagesList.length === 0;
 
   const postMessage = async ({
@@ -688,13 +835,19 @@ function Interface({
   }) => {
     await cancelMessageGeneration();
     const chatModel = resolvedChat?.modelOverride as string | null | undefined;
-    enqueueMessage({
-      chatId,
-      content,
+    const customModel =
+      chatModel && chatModel !== "automatic"
+        ? (chatModel as ModelOverride)
+        : localModelOverride !== undefined
+          ? localModelOverride
+          : undefined;
+    void createMessage({
+      message: content,
       attachmentIds,
-      ...(chatModel && chatModel !== "automatic"
-        ? { modelOverride: chatModel as ModelOverride }
-        : {}),
+      customModel,
+    }).catch((e: Error) => {
+      if (e.name === "AbortError") return;
+      console.error(e);
     });
   };
 
@@ -778,8 +931,9 @@ function Interface({
             embedded={embedded}
             large={isEmptyChat && !embedded}
             model={
-              (resolvedChat?.modelOverride ??
-                organization?.defaultModel) as ModelOverride | undefined
+              (localModelOverride !== undefined
+                ? localModelOverride
+                : resolvedChat?.modelOverride ?? null) as ModelOverride | null
             }
             setModelOverride={setModelOverride}
             chatTokens={chatTokens}

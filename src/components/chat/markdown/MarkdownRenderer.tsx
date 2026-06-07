@@ -145,8 +145,8 @@ function _MarkdownRenderer({
 
   return (
     <div
-      className="markdown-body .light relative"
-      style={style ?? {}}
+      className="markdown-body relative font-sans text-[15px] leading-relaxed text-neutral-800"
+      style={{ fontFamily: "inherit", ...style }}
       onMouseUp={(e) => onHighlight && handleSelection(e)}
     >
       {processedContent.thoughts && (

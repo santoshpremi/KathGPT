@@ -10,6 +10,7 @@ import useBreakingPoint from "../../lib/hooks/useBreakpoint";
 import { useTheme } from "../../lib/hooks/useTheme";
 import usePersistentState from "../../lib/hooks/usePersistentState";
 import { OrganizationProvider } from "../../context/organization";
+import { OpenNewChatOnLaunch } from "../../components/chat/OpenNewChatOnLaunch";
 
 export default function OrganizationLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = usePersistentState<boolean>(
@@ -48,6 +49,7 @@ export default function OrganizationLayout() {
   return (
     <OrganizationProvider>
       <CssVarsProvider theme={theme}>
+        <OpenNewChatOnLaunch />
         <div className="relative flex h-screen w-screen min-w-0 flex-row overflow-hidden">
           <Sidebar
             isSidebarOpen={isSidebarOpen}

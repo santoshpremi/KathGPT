@@ -2,7 +2,8 @@ import { CropSquare, Send } from "@mui/icons-material";
 import { Button, Textarea } from "@mui/joy";
 import { motion } from "framer-motion";
 import type { ComponentProps } from "react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useDropzone } from "react-dropzone";
 import { twMerge } from "tailwind-merge";
 import type {
   Chat,
@@ -114,6 +115,7 @@ export const ChatInput = React.forwardRef(
     const uploadDocument = useUploadDocumentWithToast();
 
     const attachmentUploaderRef = useRef<HTMLInputElement>(null);
+    const folderUploaderRef = useRef<HTMLInputElement>(null);
     const textAreaRef = useRef<HTMLInputElement>(null);
 
     const input = value ?? _input;
@@ -146,7 +148,7 @@ export const ChatInput = React.forwardRef(
 
     const imageGenerationEnabled = Boolean(productConfig?.imageGeneration);
 
-    const chosenModel: ModelOverride | null = model ?? (organization?.defaultModel as ModelOverride | null);
+    const chosenModel: ModelOverride | null = model ?? null;
 
     useEffect(() => {
       if (!knowledgeCollections) return;
@@ -198,26 +200,46 @@ export const ChatInput = React.forwardRef(
       }
     };
 
+    const attachFiles = useCallback(
+      async (files: File[]) => {
+        if (!fileUploadEnabled || files.length === 0) return;
+
+        for (const file of files) {
+          setNumLoadingAttachments((prev) => prev + 1);
+          try {
+            const { id, tokens } = await uploadDocument(file);
+            setAttachedDocuments((prev) => [...prev, { id, tokens }]);
+          } catch (e) {
+            console.error(e);
+          } finally {
+            setNumLoadingAttachments((prev) => prev - 1);
+          }
+        }
+      },
+      [fileUploadEnabled, uploadDocument],
+    );
+
     const onAddAttachment = async () => {
       const files = attachmentUploaderRef.current?.files;
       if (!files || files.length === 0) return;
-
-      for (const file of files) {
-        setNumLoadingAttachments((prev) => prev + 1);
-
-        try {
-          const { id, tokens } = await uploadDocument(file);
-
-          setAttachedDocuments((prev) => [...prev, { id, tokens }]);
-        } catch (e) {
-          console.error(e);
-        } finally {
-          setNumLoadingAttachments((prev) => prev - 1);
-        }
-      }
-      // clear the input
+      await attachFiles(Array.from(files));
       attachmentUploaderRef.current.value = "";
     };
+
+    const onAddFolder = async () => {
+      const files = folderUploaderRef.current?.files;
+      if (!files || files.length === 0) return;
+      await attachFiles(Array.from(files));
+      folderUploaderRef.current.value = "";
+    };
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+      onDrop: (files) => void attachFiles(files),
+      noClick: true,
+      noKeyboard: true,
+      disabled: !fileUploadEnabled || isDisabled,
+      multiple: true,
+    });
 
     const showSourceContainer = (open: boolean) => {
       if (open && newSource) {
@@ -229,15 +251,18 @@ export const ChatInput = React.forwardRef(
     return (
       <>
         <motion.div
+          {...getRootProps()}
           initial="normal"
           animate={sourceExpanded ? "padded" : "normal"}
           variants={{ padded: { marginTop: 140 }, normal: { marginTop: 0 } }}
           className={twMerge(
             "relative mx-auto w-full max-w-3xl",
             embedded && "max-w-none",
+            isDragActive && "rounded-2xl ring-2 ring-[#10a37f] ring-offset-2",
           )}
           id="messageInput"
         >
+          <input {...getInputProps()} />
           {!embedded && startDecorator}
           <input
             type="file"
@@ -246,8 +271,18 @@ export const ChatInput = React.forwardRef(
             accept={allowedMimeTypesForAdiDocuments}
             hidden
             ref={attachmentUploaderRef}
-            onChange={onAddAttachment}
+            onChange={() => void onAddAttachment()}
             multiple
+          />
+          <input
+            type="file"
+            id="folderAttachment"
+            hidden
+            ref={folderUploaderRef}
+            // @ts-expect-error webkitdirectory is supported in Chromium/WebKit
+            webkitdirectory=""
+            multiple
+            onChange={() => void onAddFolder()}
           />
           <div className="flex min-w-0 flex-1 flex-col">
             {!embedded &&
@@ -391,6 +426,9 @@ export const ChatInput = React.forwardRef(
                         imageGenerationEnabled={imageGenerationEnabled}
                         onUploadFiles={() =>
                           attachmentUploaderRef.current?.click()
+                        }
+                        onUploadFolder={() =>
+                          folderUploaderRef.current?.click()
                         }
                         onOpenSources={() => showSourceContainer(true)}
                         onInsertPrompt={(prompt) => setInput(prompt)}

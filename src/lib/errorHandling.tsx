@@ -1,7 +1,9 @@
 // src/lib/errorHandling.tsx
 import type { AxiosError } from "axios";
+import i18n from "i18next";
 import { toast } from "react-toastify";
 import { ErrorToastContent } from "../components/util/ErrorToastContent";
+import { RustApiError } from "./api/rust/client";
 
 export let shownNoInternetError = false;
 
@@ -10,11 +12,14 @@ type Extra = {
 };
 
 export function handleGenericError(
-error: Error, customMessage: string | undefined, p0: { source: string; }, propagate: boolean = false,
-) { 
+  error: Error,
+  customMessage: string | undefined,
+  _p0: { source: string },
+  propagate: boolean = false,
+) {
   console.error("Error:", error);
-  showErrorToast(customMessage);
-  if(propagate) {
+  showErrorToast(customMessage, error);
+  if (propagate) {
     throw error;
   }
 }
@@ -59,10 +64,24 @@ export function handleAxiosError(
   }
 }
 
-function showErrorToast( customMessage: string | undefined) {
-  toast.error(customMessage, {
-    autoClose: import.meta.env.DEV ? 1000 : false,
-    closeOnClick: false,
+function showErrorToast(
+  customMessage: string | undefined,
+  error?: Error,
+) {
+  const base = customMessage
+    ? i18n.t(customMessage)
+    : i18n.t("errors.unknown");
+  const detail =
+    error instanceof RustApiError && error.message
+      ? error.message
+      : error?.message && error.message !== base
+        ? error.message
+        : null;
+  const text = detail ? `${base} ${detail}` : base;
+
+  toast.error(text, {
+    autoClose: import.meta.env.DEV ? 5000 : 8000,
+    closeOnClick: true,
     draggable: false,
   });
 }

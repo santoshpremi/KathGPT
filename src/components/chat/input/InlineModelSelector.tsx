@@ -287,7 +287,7 @@ export function InlineModelSelector({
           )}
         </Box>
       </MenuButton>
-      <Menu placement="top-start" sx={menuSx}>
+      <Menu placement="bottom-start" sx={menuSx}>
         <ModelMenuItem
           model="automatic"
           active={active}

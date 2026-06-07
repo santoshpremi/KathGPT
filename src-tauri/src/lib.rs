@@ -1,5 +1,8 @@
 mod api;
 mod crypto;
+mod document_text;
+mod file_preview;
+mod translate_pdf;
 pub mod config;
 pub mod db;
 pub mod llm;
@@ -30,7 +33,7 @@ pub fn run() {
 
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![get_api_port])
+        .invoke_handler(tauri::generate_handler![get_api_port, save_translated_file])
         .setup(|app| {
             let open_item = MenuItem::with_id(app, "open", "Open KathGPT", true, None::<&str>)?;
             let quit_item = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
@@ -67,7 +70,9 @@ pub fn run() {
                 if let Err(err) = start_backend(&handle).await {
                     tracing::error!("Failed to start local backend: {err}");
                 }
+                show_main_window(&handle);
             });
+
             Ok(())
         })
         .run(tauri::generate_context!())
@@ -76,6 +81,7 @@ pub fn run() {
 
 async fn start_backend(handle: &tauri::AppHandle) -> anyhow::Result<()> {
     let pool = db::init_pool().await?;
+    let _ = db::repos::chats::delete_empty(&pool).await;
 
     let dist_dir = resolve_dist_dir(handle);
 
@@ -94,22 +100,42 @@ fn resolve_dist_dir(handle: &tauri::AppHandle) -> Option<PathBuf> {
     if cfg!(debug_assertions) {
         return None;
     }
-    if let Ok(resource) = handle.path().resource_dir() {
-        let dist = resource.join("dist");
-        if dist.join("index.html").exists() {
-            return Some(dist);
-        }
-    }
-    let fallback = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../dist");
-    if fallback.join("index.html").exists() {
-        return Some(fallback);
-    }
+    // Desktop UI is served by Tauri's embedded assets; Axum only needs API routes.
+    let _ = handle;
     None
 }
 
 #[tauri::command]
 fn get_api_port() -> u16 {
     API_PORT.load(Ordering::SeqCst)
+}
+
+#[tauri::command]
+fn save_translated_file(filename: String, data_base64: String) -> Result<String, String> {
+    use base64::Engine;
+    let bytes = base64::engine::general_purpose::STANDARD
+        .decode(data_base64.trim())
+        .map_err(|err| format!("Invalid file data: {err}"))?;
+
+    let default_name = if filename.trim().is_empty() {
+        "translated.txt".to_string()
+    } else {
+        filename
+    };
+
+    let path = rfd::FileDialog::new()
+        .set_file_name(&default_name)
+        .save_file()
+        .ok_or_else(|| "Save cancelled".to_string())?;
+
+    std::fs::write(&path, bytes).map_err(|err| format!("Could not save file: {err}"))?;
+
+    #[cfg(target_os = "macos")]
+    {
+        let _ = std::process::Command::new("open").arg("-R").arg(&path).spawn();
+    }
+
+    Ok(path.to_string_lossy().into_owned())
 }
 
 fn show_main_window(app: &tauri::AppHandle) {

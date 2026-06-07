@@ -14,8 +14,8 @@
     "test:e2e:ui": "playwright test --ui",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
-    "tauri:build": "rm -f src-tauri/target/release/api-server src-tauri/target/debug/api-server && tauri build",
-    "local:api": "cargo run --manifest-path src-tauri/Cargo.toml --features api-server-cli --bin api-server",
+    "tauri:build": "tauri build",
+    "local:api": "cargo run --manifest-path src-tauri/Cargo.toml --features api-server-cli --example api-server",
     "website:dev": "pnpm --dir website dev",
     "website:build": "pnpm --dir website build",
     "website:preview": "pnpm --dir website preview"
@@ -66,6 +66,7 @@
     "@tanstack/react-query": "5.66.9",
     "@tanstack/react-virtual": "3.13.2",
     "@tanstack/virtual-core": "3.13.2",
+    "@tauri-apps/api": "^2.11.0",
     "@tremor/react": "3.18.7",
     "@types/react-lottie": "1.2.10",
     "@ungap/structured-clone": "1.3.0",

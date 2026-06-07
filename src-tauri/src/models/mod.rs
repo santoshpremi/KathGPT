@@ -60,10 +60,13 @@ pub struct ChatSummary {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CreateChatRequest {
     pub id: String,
     #[serde(default)]
     pub name: Option<String>,
+    #[serde(default)]
+    pub model_override: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -122,6 +125,8 @@ pub struct SendMessageRequest {
     pub temperature: Option<f32>,
     #[serde(default)]
     pub custom_system_prompt_suffix: Option<String>,
+    #[serde(default)]
+    pub attachment_ids: Vec<String>,
 }
 
 fn default_language() -> String {

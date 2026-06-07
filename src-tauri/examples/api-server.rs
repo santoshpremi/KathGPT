@@ -1,6 +1,6 @@
 //! Standalone Rust API server (no Tauri window) — useful for backend development.
 //!
-//! Run: `cargo run --bin api-server` from `src-tauri/`
+//! Run: `cargo run --example api-server` from `src-tauri/`
 
 use tracing::info;
 use tracing_subscriber::EnvFilter;

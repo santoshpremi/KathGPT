@@ -3,26 +3,39 @@ import "./index.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { ApiProvider } from "./lib/api/ApiProvider";
+import { initRustApiClient, isTauriApp } from "./lib/api/rust/init";
 import { loadI18n } from "./lib/i18n";
 
-// Remove all Sentry-related code and simplify initialization
 async function initializeApp() {
+  const root = document.getElementById("root");
+  if (!root) return;
+
   try {
+    await initRustApiClient();
     await loadI18n();
+    initReact(root);
   } catch (err) {
     console.error("Failed to initialize app:", err);
-  } finally {
-    initReact();
+    const hint = isTauriApp()
+      ? "Quit any other KathGPT or dev server, then reopen the app."
+      : "Make sure the local API is running (pnpm run dev).";
+    root.innerHTML = `
+      <div style="display:flex;height:100vh;align-items:center;justify-content:center;font-family:system-ui,sans-serif;padding:2rem;text-align:center;">
+        <div>
+          <h2 style="margin:0 0 0.5rem">KathGPT could not start</h2>
+          <p style="color:#666;margin:0 0 1rem">${hint}</p>
+          <p style="color:#999;font-size:0.875rem;margin:0">${String(err)}</p>
+        </div>
+      </div>`;
   }
 }
 
-function initReact() {
-  ReactDOM.createRoot(document.getElementById("root")!).render(
+function initReact(root: HTMLElement) {
+  ReactDOM.createRoot(root).render(
     <ApiProvider>
       <Routes />
     </ApiProvider>,
   );
 }
 
-// Start the app
 initializeApp();

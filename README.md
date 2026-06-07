@@ -104,7 +104,16 @@ pnpm tauri:dev          # dev with native window
 pnpm tauri:build        # production installer (.dmg / .msi / .AppImage)
 ```
 
-**macOS install (unsigned build):** Download from [the website](https://santoshpremi.github.io/KathGPT/) or build locally. On first open, if macOS blocks the app, **right-click → Open** (or run `xattr -cr /Applications/KathGPT.app`). Apple notarization requires a paid Developer ID for one-click install without that step.
+**macOS install (unsigned build):** Download from [the website](https://santoshpremi.github.io/KathGPT/) or build locally. If macOS shows *“could not verify”*, the browser added a quarantine flag — this is expected without Apple notarization ($99/yr Developer ID).
+
+1. **Terminal (recommended):** After downloading the `.dmg` to `~/Downloads`, run the one-liner on the [download page](https://santoshpremi.github.io/KathGPT/#download), or:
+   ```bash
+   ./scripts/install-macos.sh
+   ```
+2. **Already in Applications?** `xattr -cr /Applications/KathGPT.app && open -a KathGPT`
+3. **Manual:** Right-click **KathGPT.app** → **Open** → **Open** again.
+
+To ship notarized builds from CI, add GitHub secrets: `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `APPLE_ID`, `APPLE_PASSWORD`, `APPLE_TEAM_ID`.
 
 ---
 

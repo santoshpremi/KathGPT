@@ -15,7 +15,7 @@ interface QueuedMessage {
 interface QueuedMessagesStore {
   queuedMessages: QueuedMessage[];
   addQueuedMessage: (message: QueuedMessage) => void;
-  shiftQueuedMessage: () => void;
+  shiftQueuedMessage: (chatId: string) => void;
   clear: () => void;
 }
 
@@ -25,11 +25,15 @@ export const useQueuedMessagesStore = create<QueuedMessagesStore>((set) => ({
     set((state) => ({
       queuedMessages: [...state.queuedMessages, message],
     })),
-  shiftQueuedMessage: () =>
+  shiftQueuedMessage: (chatId) =>
     set((state) => {
-      const [, ...rest] = state.queuedMessages;
+      const index = state.queuedMessages.findIndex((m) => m.chatId === chatId);
+      if (index === -1) return state;
       return {
-        queuedMessages: rest,
+        queuedMessages: [
+          ...state.queuedMessages.slice(0, index),
+          ...state.queuedMessages.slice(index + 1),
+        ],
       };
     }),
   clear: () => set({ queuedMessages: [] }),

@@ -55,13 +55,23 @@ pub async fn get(pool: &SqlitePool, chat_id: &str) -> anyhow::Result<Option<Chat
     }))
 }
 
-pub async fn create(pool: &SqlitePool, id: &str, name: Option<&str>) -> anyhow::Result<ChatSummary> {
+pub async fn create(
+    pool: &SqlitePool,
+    id: &str,
+    name: Option<&str>,
+    model_override: Option<&str>,
+) -> anyhow::Result<ChatSummary> {
+    if let Some(existing) = get(pool, id).await? {
+        return Ok(existing);
+    }
+
     let now = chrono::Utc::now().to_rfc3339();
     sqlx::query(
-        "INSERT INTO chats (id, name, created_at, updated_at) VALUES (?, ?, ?, ?)",
+        "INSERT INTO chats (id, name, model_override, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
     )
     .bind(id)
     .bind(name)
+    .bind(model_override)
     .bind(&now)
     .bind(&now)
     .execute(pool)
@@ -70,7 +80,7 @@ pub async fn create(pool: &SqlitePool, id: &str, name: Option<&str>) -> anyhow::
     Ok(ChatSummary {
         id: id.to_string(),
         name: name.map(str::to_string),
-        model_override: None,
+        model_override: model_override.map(str::to_string),
         created_at: now.clone(),
         updated_at: now,
     })

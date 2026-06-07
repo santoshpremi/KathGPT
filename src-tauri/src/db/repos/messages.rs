@@ -132,6 +132,7 @@ pub async fn insert_user_message(
     pool: &SqlitePool,
     chat_id: &str,
     content: &str,
+    attachment_ids: &[String],
 ) -> anyhow::Result<(String, bool)> {
     let count = count_for_chat(pool, chat_id).await?;
     let is_first = count == 0;
@@ -147,7 +148,7 @@ pub async fn insert_user_message(
         author_id: None,
         chat_id: chat_id.to_string(),
         generation_model: None,
-        attachment_ids: vec![],
+        attachment_ids: attachment_ids.to_vec(),
         citations: vec![],
         artifact_version_id: None,
         cancelled: Some(false),
