@@ -1,10 +1,9 @@
 import { DownloadButton } from "./DownloadButton";
-import { AppWindow } from "./AppWindow";
-import { SITE, assetUrl } from "../lib/site";
+import { SITE } from "../lib/site";
 
 export function Hero() {
   return (
-    <section className="hero-glow relative overflow-hidden pt-28 pb-16 md:pt-36 md:pb-24">
+    <section className="hero-glow relative overflow-hidden pt-28 pb-20 md:pt-36 md:pb-28">
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#ffffff06_1px,transparent_1px),linear-gradient(to_bottom,#ffffff06_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,#000_65%,transparent_100%)]" />
 
       <div className="relative mx-auto max-w-6xl px-6">
@@ -39,16 +38,6 @@ export function Hero() {
           <p className="mt-6 text-sm text-slate-500">
             macOS · Windows · Linux · {SITE.license} License
           </p>
-        </div>
-
-        <div className="relative mx-auto mt-14 max-w-5xl">
-          <div className="pointer-events-none absolute -inset-6 rounded-[2rem] bg-gradient-to-b from-indigo-500/20 via-violet-500/10 to-transparent opacity-70 blur-3xl" />
-          <AppWindow
-            image={assetUrl("images/chat.png")}
-            alt="KathGPT chat interface"
-            className="relative"
-            priority
-          />
         </div>
       </div>
     </section>
