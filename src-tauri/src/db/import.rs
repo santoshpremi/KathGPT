@@ -61,6 +61,11 @@ struct LegacyProviderKeys {
 }
 
 pub async fn import_legacy_if_needed(pool: &SqlitePool) -> anyhow::Result<()> {
+    // Only runs in debug/dev builds. Release builds always start with a clean DB.
+    if !cfg!(debug_assertions) {
+        return Ok(());
+    }
+
     let chat_count = chats::count(pool).await?;
     if chat_count > 0 {
         return Ok(());
