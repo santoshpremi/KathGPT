@@ -32,6 +32,7 @@ export function DownloadSection() {
   const primaryPlatform = PLATFORMS.find((p) => p.id === platform)!;
   const primaryAsset = release ? matchAsset(release.assets, platform) : null;
   const releasesUrl = getReleasesUrl();
+  const buildFromSourceUrl = `https://github.com/${SITE.githubRepo}#quick-start`;
 
   return (
     <section id="download" className="border-t border-white/5 py-24">
@@ -41,8 +42,8 @@ export function DownloadSection() {
             Download KathGPT
           </h2>
           <p className="mt-4 text-lg text-slate-400">
-            Free for personal use. Install the desktop app, add your API key, and
-            start chatting in minutes.
+            Free, open-source desktop app for macOS, Windows, and Linux. Install,
+            add your API key, and start chatting in minutes.
           </p>
         </div>
 
@@ -71,27 +72,38 @@ export function DownloadSection() {
               </p>
             </div>
           ) : (
-            <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-8 text-center">
-              <p className="text-amber-100/90">
-                No release published yet. Build locally with{" "}
-                <code className="rounded bg-black/30 px-1.5 py-0.5 text-sm text-amber-200">
-                  pnpm tauri:build
-                </code>{" "}
-                or watch{" "}
+            <div className="rounded-2xl border border-indigo-500/30 bg-gradient-to-b from-indigo-500/10 to-slate-900/50 p-8 text-center">
+              <p className="text-sm font-medium text-indigo-300">
+                v{SITE.version} installers
+              </p>
+              <p className="mt-3 text-slate-300">
+                Desktop builds (.dmg · .msi · .AppImage) are published on GitHub
+                Releases. If the latest build is still running in CI, check back
+                in a few minutes or build from source now.
+              </p>
+              <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <a
                   href={releasesUrl}
-                  className="font-medium text-indigo-400 underline-offset-2 hover:underline"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-indigo-600/30 transition hover:bg-indigo-500 sm:w-auto"
                 >
-                  GitHub Releases
-                </a>{" "}
-                for installers.
+                  <DownloadIcon className="h-5 w-5" />
+                  Get installers on GitHub
+                </a>
+                <a
+                  href={buildFromSourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-white/10 sm:w-auto"
+                >
+                  Build from source
+                </a>
+              </div>
+              <p className="mt-4 text-sm text-slate-500">
+                Local build:{" "}
+                <code className="rounded bg-black/30 px-1.5 py-0.5 text-amber-200/90">
+                  pnpm install && pnpm tauri:build
+                </code>
               </p>
-              <a
-                href={releasesUrl}
-                className="mt-6 inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-white transition hover:bg-white/10"
-              >
-                View all releases
-              </a>
             </div>
           )}
         </div>
@@ -105,12 +117,13 @@ export function DownloadSection() {
               <a
                 key={p.id}
                 href={asset?.browser_download_url ?? releasesUrl}
+                target={asset ? undefined : "_blank"}
+                rel={asset ? undefined : "noopener noreferrer"}
                 className={`flex items-center justify-between rounded-xl border px-4 py-3 text-sm transition ${
                   isCurrent
                     ? "border-indigo-500/40 bg-indigo-500/10 text-white"
                     : "border-white/5 bg-slate-900/30 text-slate-300 hover:border-white/10 hover:bg-slate-900/50"
-                } ${!asset ? "pointer-events-none opacity-50" : ""}`}
-                aria-disabled={!asset}
+                }`}
               >
                 <span className="font-medium">{p.label}</span>
                 {asset ? (
@@ -118,7 +131,7 @@ export function DownloadSection() {
                     {formatBytes(asset.size)}
                   </span>
                 ) : (
-                  <span className="text-xs text-slate-500">Coming soon</span>
+                  <span className="text-xs text-indigo-400">GitHub Releases →</span>
                 )}
               </a>
             );
@@ -142,7 +155,7 @@ export function DownloadSection() {
             </li>
             <li>
               <strong className="text-slate-300">API key:</strong> OpenRouter
-              recommended (free tier available at openrouter.ai)
+              recommended (free tier at openrouter.ai)
             </li>
           </ul>
         </div>
@@ -153,7 +166,7 @@ export function DownloadSection() {
             href={`https://github.com/${SITE.githubRepo}/blob/main/README.md`}
             className="text-indigo-400 hover:underline"
           >
-            Build from source
+            README & quick start
           </a>
         </p>
       </div>

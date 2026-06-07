@@ -5,7 +5,14 @@ export const SITE = {
     "A native desktop app with a Rust backend and React UI. Bring your own API key, stream from GPT / Claude / Gemini, and keep every conversation on your device.",
   githubRepo: import.meta.env.VITE_GITHUB_REPO ?? "santoshpremi/KathGPT",
   license: "MIT",
+  version: "0.1.0",
 } as const;
+
+/** Public asset path — respects Vite base (e.g. /KathGPT/ on GitHub Pages). */
+export function assetUrl(path: string): string {
+  const base = import.meta.env.BASE_URL;
+  return `${base}${path.replace(/^\//, "")}`;
+}
 
 export type PlatformId = "mac-arm" | "mac-intel" | "windows" | "linux";
 

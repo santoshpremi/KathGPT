@@ -62,7 +62,18 @@ jobs:
         with:
           path: artifacts
 
+      - name: List installer artifacts
+        run: find artifacts -type f | head -50
+
       - uses: softprops/action-gh-release@v2
         with:
-          files: artifacts/**/*
+          files: |
+            artifacts/**/*.dmg
+            artifacts/**/*.msi
+            artifacts/**/*.exe
+            artifacts/**/*.AppImage
+            artifacts/**/*.deb
+            artifacts/**/*.rpm
+            artifacts/**/*.app.tar.gz
           generate_release_notes: true
+          fail_on_unmatched_files: false
