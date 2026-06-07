@@ -40,11 +40,15 @@ async fn run_migrations(pool: &SqlitePool) -> anyhow::Result<()> {
 }
 
 async fn apply_migration_file(pool: &SqlitePool, version: i64, sql_file: &str) -> anyhow::Result<()> {
+    // Treat "no such table: schema_migrations" as "not yet applied" — happens on a fresh DB
+    // where migration 1 hasn't run yet and the table doesn't exist.
     let applied: Option<i64> =
         sqlx::query_scalar("SELECT version FROM schema_migrations WHERE version = ?")
             .bind(version)
             .fetch_optional(pool)
-            .await?;
+            .await
+            .ok()
+            .flatten();
 
     if applied.is_some() {
         return Ok(());
