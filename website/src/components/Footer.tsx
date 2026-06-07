@@ -9,6 +9,9 @@ export function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 md:flex-row">
         <Logo />
         <nav className="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
+          <a href="#product" className="hover:text-white">
+            Product
+          </a>
           <a href="#tech" className="hover:text-white">
             Rust
           </a>

@@ -9,12 +9,17 @@
 
   body {
     @apply bg-slate-950 text-slate-100 antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  ::selection {
+    @apply bg-indigo-500/40 text-white;
   }
 }
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-indigo-300 via-violet-300 to-purple-300 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-indigo-300 via-violet-300 to-cyan-300 bg-clip-text text-transparent;
   }
 
   .hero-glow {
@@ -22,5 +27,13 @@
       radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.35), transparent),
       radial-gradient(ellipse 60% 40% at 80% 50%, rgba(139, 92, 246, 0.15), transparent),
       radial-gradient(ellipse 50% 30% at 20% 80%, rgba(79, 70, 229, 0.12), transparent);
+  }
+
+  .section-glow {
+    background: radial-gradient(
+      ellipse 70% 50% at 50% 50%,
+      rgba(99, 102, 241, 0.08),
+      transparent
+    );
   }
 }

@@ -54,7 +54,10 @@ export function Features() {
     <section id="features" className="border-t border-white/5 py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
+          <p className="text-sm font-semibold uppercase tracking-widest text-indigo-400">
+            Why KathGPT
+          </p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
             Everything you need, nothing you don&apos;t
           </h2>
           <p className="mt-4 text-lg text-slate-400">
