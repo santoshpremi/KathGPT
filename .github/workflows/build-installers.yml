@@ -12,7 +12,7 @@ on:
       - ".github/workflows/build-installers.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: build-installers
@@ -47,51 +47,30 @@ jobs:
       - run: pnpm build
       - run: pnpm tauri build
 
-      - name: Collect Linux installers
+      - name: Publish Linux installer to website
         run: |
-          mkdir -p dist-installers
-          find src-tauri/target/release/bundle -type f \( -name '*.AppImage' -o -name '*.deb' \) -exec cp {} dist-installers/ \;
-          ls -la dist-installers/
+          set -euo pipefail
+          APPIMAGE=$(find src-tauri/target/release/bundle -name '*.AppImage' | head -1)
+          if [ -z "$APPIMAGE" ]; then
+            echo "No AppImage found"
+            find src-tauri/target/release/bundle -type f
+            exit 1
+          fi
+          BASENAME=$(basename "$APPIMAGE")
+          cp "$APPIMAGE" "website/public/downloads/$BASENAME"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: linux-installers
-          path: dist-installers/
-          if-no-files-found: error
-
-  build-mac-intel:
-    runs-on: macos-latest
-    env:
-      NODE_OPTIONS: --max-old-space-size=8192
-      CI: true
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: x86_64-apple-darwin
-
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build
-      - run: pnpm tauri build --target x86_64-apple-darwin
-
-      - name: Collect Intel DMG
-        run: |
-          mkdir -p dist-installers
-          find src-tauri/target -path '*/bundle/dmg/*.dmg' -exec cp {} dist-installers/ \;
-          ls -la dist-installers/
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: mac-intel-installer
-          path: dist-installers/
-          if-no-files-found: error
+          manifest_path = Path("website/public/downloads/manifest.json")
+          data = json.loads(manifest_path.read_text())
+          appimages = sorted(Path("website/public/downloads").glob("*.AppImage"))
+          if appimages:
+              data["platforms"]["linux"] = appimages[-1].name
+          manifest_path.write_text(json.dumps(data, indent=2) + "\n")
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add website/public/downloads/
+          git diff --staged --quiet || git commit -m "ci: publish Linux AppImage for website download"
+          git push
