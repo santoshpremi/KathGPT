@@ -46,7 +46,7 @@ export function ProductShowcase() {
         </div>
 
         <nav
-          className="mx-auto mt-10 flex max-w-3xl flex-wrap items-center justify-center gap-1 rounded-full border border-stone-200 bg-stone-50 p-1"
+          className="mx-auto mt-10 flex w-full max-w-5xl flex-nowrap items-center justify-center gap-1 overflow-x-auto rounded-full border border-stone-200 bg-stone-50 p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           aria-label="Product features"
         >
           {PRODUCT_FEATURES.map((item) => {
@@ -58,7 +58,7 @@ export function ProductShowcase() {
                 key={item.id}
                 type="button"
                 onClick={() => setActive(item.id)}
-                className={`inline-flex min-w-[120px] flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium transition ${
+                className={`inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-xs font-medium transition sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm ${
                   isActive
                     ? "bg-white text-stone-900 shadow-soft"
                     : "text-stone-500 hover:text-stone-800"
@@ -66,8 +66,7 @@ export function ProductShowcase() {
                 aria-pressed={isActive}
               >
                 <Icon className="h-4 w-4 shrink-0" />
-                <span className="hidden sm:inline">{item.label}</span>
-                <span className="sm:hidden">{item.shortLabel}</span>
+                <span>{item.label}</span>
               </button>
             );
           })}

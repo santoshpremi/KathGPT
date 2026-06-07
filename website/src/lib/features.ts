@@ -29,7 +29,7 @@ export const PRODUCT_FEATURES: ProductFeature[] = [
   },
   {
     id: "image",
-    label: "Image Generate",
+    label: "Image Generator",
     shortLabel: "Images",
     title: "Generate images without leaving the app",
     description:
