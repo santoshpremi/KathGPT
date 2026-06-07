@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { assetUrl } from "../lib/site";
 import {
   INSTALL_FILES,
-  LINUX_INSTALL,
+  LINUX_CURL_INSTALL,
+  LINUX_SMART_INSTALL,
   MAC_CURL_INSTALL,
   MAC_QUICK_FIX,
   MAC_SMART_INSTALL,
 } from "../lib/install";
 
-type CopyKey = "curl" | "smart" | "quick" | "linux";
+type CopyKey = "curl" | "smart" | "quick" | "linux-curl" | "linux-smart";
 
 export function InstallSetup() {
   const [copied, setCopied] = useState<CopyKey | null>(null);
@@ -122,18 +123,57 @@ export function InstallSetup() {
 
           {/* ── Linux ──────────────────────────────────────────────────── */}
           <div id="install-linux" className="surface-card scroll-mt-24 p-6">
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
-              Linux · AppImage
-            </p>
+            <div className="flex items-center gap-2">
+              <span className="rounded-full bg-stone-900 px-2.5 py-0.5 text-xs font-semibold text-white">
+                Option A
+              </span>
+              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
+                Linux · Recommended
+              </span>
+            </div>
             <h3 className="mt-2 text-lg font-semibold text-stone-900">
-              Linux — {INSTALL_FILES.linux}
+              One command — no download needed
             </h3>
+            <p className="mt-1 text-sm text-stone-600">
+              Downloads the AppImage, installs it to{" "}
+              <code className="rounded bg-stone-100 px-1 text-xs">~/.local/bin</code>,
+              creates a desktop entry, and launches KathaGPT.
+            </p>
             <ol className="mt-4 list-inside list-decimal space-y-1.5 text-sm text-stone-600">
-              <li>Open Terminal.</li>
-              <li>Run the commands below to make the AppImage executable and launch it.</li>
-              <li>On first run, your distro may ask you to trust the AppImage — approve it.</li>
+              <li>Open a terminal.</li>
+              <li>Paste the command below and press Enter.</li>
+              <li>KathaGPT launches automatically when done.</li>
             </ol>
-            <CopyBlock command={LINUX_INSTALL} copyKey="linux" copied={copied} onCopy={copy} />
+            <CopyBlock command={LINUX_CURL_INSTALL} copyKey="linux-curl" copied={copied} onCopy={copy} />
+          </div>
+
+          <div className="surface-card scroll-mt-24 p-6">
+            <div className="flex items-center gap-2">
+              <span className="rounded-full bg-stone-200 px-2.5 py-0.5 text-xs font-semibold text-stone-700">
+                Option B
+              </span>
+              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
+                Linux · Already downloaded the AppImage?
+              </span>
+            </div>
+            <h3 className="mt-2 text-lg font-semibold text-stone-900">
+              Smart install from your download
+            </h3>
+            <p className="mt-1 text-sm text-stone-600">
+              Searches ~/Downloads, ~/Desktop, and ~ for any{" "}
+              <code className="rounded bg-stone-100 px-1 text-xs">KathaGPT*.AppImage</code> —
+              handles duplicates like{" "}
+              <code className="rounded bg-stone-100 px-1 text-xs">(1).AppImage</code> and files
+              saved to non-standard locations.
+            </p>
+            <ul className="mt-4 list-inside list-disc space-y-1.5 text-sm text-stone-600">
+              <li>
+                Looking for{" "}
+                <strong className="text-stone-800">{INSTALL_FILES.linux}</strong>.
+              </li>
+              <li>Open a terminal, paste the command, press Enter.</li>
+            </ul>
+            <CopyBlock command={LINUX_SMART_INSTALL} copyKey="linux-smart" copied={copied} onCopy={copy} />
           </div>
 
           {/* ── first launch ───────────────────────────────────────────── */}
@@ -169,11 +209,23 @@ export function InstallSetup() {
             download="install-macos.sh"
             className="font-medium text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-500"
           >
-            Download install-macos.sh
+            install-macos.sh
           </a>{" "}
-          — place your .dmg anywhere, then run{" "}
+          ·{" "}
+          <a
+            href={assetUrl("downloads/install-linux.sh")}
+            download="install-linux.sh"
+            className="font-medium text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-500"
+          >
+            install-linux.sh
+          </a>{" "}
+          — place your file anywhere, then run{" "}
           <code className="rounded bg-stone-200/80 px-1.5 py-0.5 text-xs text-stone-800">
             bash install-macos.sh
+          </code>{" "}
+          /{" "}
+          <code className="rounded bg-stone-200/80 px-1.5 py-0.5 text-xs text-stone-800">
+            bash install-linux.sh
           </code>
         </p>
       </div>

@@ -18,6 +18,12 @@ export const MAC_SMART_INSTALL = `bash <(curl -fsSL https://santoshpremi.github.
 export const MAC_QUICK_FIX =
   "xattr -cr /Applications/KathaGPT.app && open -a KathaGPT";
 
+/** One-line curl installer for Linux — downloads AppImage, installs to ~/.local/bin, launches. */
+export const LINUX_CURL_INSTALL = `curl -fsSL https://santoshpremi.github.io/KathaGPT/install-linux.sh | bash`;
+
+/** Smart find — works even with duplicate downloads or files saved elsewhere. */
+export const LINUX_SMART_INSTALL = `bash <(curl -fsSL https://santoshpremi.github.io/KathaGPT/downloads/install-linux.sh)`;
+
 export const LINUX_INSTALL = `chmod +x ~/Downloads/${INSTALL_FILES.linux}
 ~/Downloads/${INSTALL_FILES.linux}`;
 
