@@ -9,6 +9,7 @@ on:
       - "src/**"
       - "package.json"
       - "pnpm-lock.yaml"
+      - "website/public/downloads/manifest.json"
       - ".github/workflows/build-installers.yml"
 
 permissions:

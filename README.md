@@ -85,6 +85,8 @@ pnpm install
 ./start-dev.sh          # or: pnpm dev
 ```
 
+> **GitHub repo name:** The project is **KathaGPT**. If your remote is still `KathGPT`, rename it under **GitHub → Settings → General → Repository name → `KathaGPT`**, then run `git remote set-url origin https://github.com/santoshpremi/KathaGPT.git`.
+
 Open **http://localhost:5173** — the Rust API runs on **http://127.0.0.1:17890** (proxied as `/api/local`).
 
 ### 2. Add an API key
