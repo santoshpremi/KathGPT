@@ -1,31 +1,66 @@
 # KathGPT Local Edition
 
-**Private AI chat on your machine.** Bring your own API key — conversations, workflows, and settings stay on your device.
+**Fast, private AI chat on your machine — powered by Rust.** Bring your own API key; conversations, workflows, and settings stay on your device.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![GitHub](https://img.shields.io/github/stars/santoshpremi/KathGPT?style=social)](https://github.com/santoshpremi/KathGPT)
 
 | | |
 |---|---|
 | **Version** | 0.1.0 |
-| **Stack** | React · Rust (Axum) · Tauri v2 · SQLite |
+| **Stack** | React · **Rust (Axum)** · Tauri v2 · SQLite |
 | **Platforms** | macOS · Windows · Linux |
+| **Repo** | [github.com/santoshpremi/KathGPT](https://github.com/santoshpremi/KathGPT) |
+| **Website** | [Marketing site](website/) · deploy via GitHub Pages |
+
+---
+
+## Powered by Rust
+
+KathGPT’s backend is **100% Rust** — the old Node.js server is gone. One native core handles everything that matters for speed and privacy:
+
+| Benefit | How |
+|---------|-----|
+| **Low overhead** | Axum API embedded in the Tauri process — no separate Node runtime, no Electron Chromium bundle |
+| **Fast streaming** | SSE token streams parsed in Rust (`reqwest` + Tokio) with minimal latency between provider and UI |
+| **Efficient storage** | SQLite via `sqlx` — instant chat history, workflows, and settings on disk |
+| **Memory safety** | Rust catches data races and use-after-free at compile time; fewer crashes around your local data |
+| **Small desktop app** | Tauri uses the OS WebView → smaller installers and lower RAM than typical Electron AI clients |
+| **Loopback-only API** | Server binds `127.0.0.1:17890` — not exposed to your LAN |
+
+```
+┌─────────────────────────────────────────────┐
+│  KathGPT.app / .exe / .AppImage             │
+│  ┌───────────────────────────────────────┐  │
+│  │  Tauri (Rust)                         │  │
+│  │  • Native window + system tray        │  │
+│  │  • Axum API · SQLite · LLM routing    │  │
+│  │  • WebView → React UI (dist/)         │  │
+│  └───────────────────────────────────────┘  │
+└─────────────────────────────────────────────┘
+          │ HTTPS (only when you chat)
+          ▼
+   OpenRouter / OpenAI / Anthropic / Gemini / Perplexity
+```
 
 ---
 
 ## Why KathGPT?
 
-- **Local-first** — Chats and app data live in a SQLite database on your machine, not on a remote server.
+- **Local-first** — Chats and app data live in SQLite on your machine, not on a remote server.
 - **BYOK** — Connect OpenRouter, OpenAI, Anthropic, Gemini, or Perplexity with keys you control.
-- **Protected keys** — API keys stay local; masked in the UI. Encryption infrastructure is in place; see [SECURITY.md](SECURITY.md) for v0.1 storage details.
-- **Desktop-ready** — One-click installers via Tauri; also runs in the browser during development.
+- **Protected keys** — API keys stay local; masked in the UI. See [SECURITY.md](SECURITY.md) for storage details.
+- **Native desktop** — One-click `.dmg` / `.msi` / `.AppImage` installers; also runs in the browser during development.
+- **Open source** — MIT licensed; inspect, fork, and self-host the stack.
 
 ### What's included
 
 | Area | Features |
 |------|----------|
-| **Chat** | Streaming responses, model picker, artifacts, workflows, prompt library |
-| **Tools** | Research assistant (Sonar), image generator, translator, meeting notes, tech support |
-| **Data** | JSON export/import backup, legacy `.data/dev-store.json` auto-migration on first launch |
+| **Chat** | Streaming responses, multi-model picker, artifacts, draft chats (no empty saves) |
+| **Tools** | Research assistant (Sonar + citations), image generator, translator, meeting notes, tech support |
+| **Productivity** | Workflows, prompt library (10 best practices + saved prompts), JSON export/import |
+| **Data** | Legacy `.data/dev-store.json` auto-migration on first launch |
 
 ---
 
@@ -206,7 +241,9 @@ CI runs Rust checks (`.github/workflows/rust.yml`), Playwright (`.github/workflo
 
 ## Marketing website
 
-The landing page lives in `website/` — hero, features, FAQ, and GitHub Releases download buttons.
+The landing page lives in `website/` — Rust performance section, features, FAQ, and GitHub Releases download buttons.
+
+**Live site (after Pages deploy):** `https://santoshpremi.github.io/KathGPT/`
 
 ```bash
 pnpm website:dev        # http://localhost:5174

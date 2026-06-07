@@ -11,12 +11,12 @@ export function Hero() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-indigo-400" />
           </span>
-          Local Edition — v0.1
+          Rust backend · Local Edition v0.1
         </div>
 
         <h1 className="mx-auto max-w-4xl text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
           Private AI chat,{" "}
-          <span className="text-gradient">entirely on your machine</span>
+          <span className="text-gradient">fast on your machine</span>
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400 md:text-xl">
@@ -70,9 +70,9 @@ export function Hero() {
               </div>
             </div>
             <div className="hidden flex-col justify-end gap-2 text-right text-xs text-slate-500 md:flex">
-              <span>Stored locally</span>
+              <span className="text-orange-300/90">● Rust API · Axum</span>
               <span>SQLite on device</span>
-              <span className="text-emerald-400/80">● Encrypted at rest (OS)</span>
+              <span className="text-emerald-400/80">● Loopback only</span>
             </div>
           </div>
         </div>

@@ -1,5 +1,11 @@
 const features = [
   {
+    title: "Rust-powered core",
+    description:
+      "Chat streaming, SQLite, LLM routing, research, translation, and image tools all run in a single Rust process — fast, memory-safe, no Node server.",
+    icon: RustIcon,
+  },
+  {
     title: "Your data stays local",
     description:
       "Chats, workflows, and settings live in a SQLite database on your device — not on our servers.",
@@ -18,6 +24,12 @@ const features = [
     icon: SparklesIcon,
   },
   {
+    title: "Built-in AI tools",
+    description:
+      "Research assistant with citations, image generator, translator, meeting notes, prompt library, and reusable workflows.",
+    icon: ToolsIcon,
+  },
+  {
     title: "Workflows & artifacts",
     description:
       "Save reusable prompts, run demo workflows, and keep structured outputs alongside your chats.",
@@ -26,7 +38,7 @@ const features = [
   {
     title: "Native desktop app",
     description:
-      "Built with Tauri for a fast, lightweight app on macOS, Windows, and Linux with system tray support.",
+      "Tauri v2 ships a small installer on macOS, Windows, and Linux — system tray, native window, and a fraction of the RAM of Electron apps.",
     icon: DesktopIcon,
   },
   {
@@ -69,6 +81,22 @@ export function Features() {
         </div>
       </div>
     </section>
+  );
+}
+
+function RustIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2C9.8 2 8 3.8 8 6v1H6.5C5.1 7 4 8.1 4 9.5v9C4 19.9 5.1 21 6.5 21h11c1.4 0 2.5-1.1 2.5-2.5v-9C20 8.1 18.9 7 17.5 7H16V6c0-2.2-1.8-4-4-4zm0 2c1.1 0 2 .9 2 2v1h-4V6c0-1.1.9-2 2-2zm-5.5 5h11c.3 0 .5.2.5.5v9c0 .3-.2.5-.5.5h-11c-.3 0-.5-.2-.5-.5v-9c0-.3.2-.5.5-.5z" />
+    </svg>
+  );
+}
+
+function ToolsIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
+    </svg>
   );
 }
 

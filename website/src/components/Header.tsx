@@ -1,6 +1,7 @@
 import { Logo } from "./Logo";
 
 const links = [
+  { href: "#tech", label: "Rust" },
   { href: "#features", label: "Features" },
   { href: "#download", label: "Download" },
   { href: "#faq", label: "FAQ" },

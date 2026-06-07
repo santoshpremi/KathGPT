@@ -4,6 +4,7 @@ import { Features } from "./components/Features";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
+import { TechStack } from "./components/TechStack";
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
       <Header />
       <main>
         <Hero />
+        <TechStack />
         <Features />
         <DownloadSection />
         <FAQ />

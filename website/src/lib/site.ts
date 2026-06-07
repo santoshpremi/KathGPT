@@ -1,8 +1,8 @@
 export const SITE = {
   name: "KathGPT",
-  tagline: "Private AI chat on your machine",
+  tagline: "Fast, private AI — powered by Rust",
   description:
-    "Bring your own API key. Chat with GPT, Claude, Gemini, and more — while your conversations stay on your device.",
+    "A native desktop app with a Rust backend and React UI. Bring your own API key, stream from GPT / Claude / Gemini, and keep every conversation on your device.",
   githubRepo: import.meta.env.VITE_GITHUB_REPO ?? "santoshpremi/KathGPT",
   license: "MIT",
 } as const;
