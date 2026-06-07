@@ -1,4 +1,5 @@
 import { usePrimaryDownload } from "../hooks/usePrimaryDownload";
+import { navigateToInstallSetup } from "../lib/install";
 import { formatBytes } from "../lib/site";
 
 interface DownloadButtonProps {
@@ -12,7 +13,7 @@ export function DownloadButton({
   className = "",
   showMeta = false,
 }: DownloadButtonProps) {
-  const { loading, platformMeta, downloadUrl, isReady, fileName, fileSize } =
+  const { loading, platform, platformMeta, downloadUrl, isReady, fileName, fileSize } =
     usePrimaryDownload();
 
   const sizeClasses = {
@@ -48,6 +49,7 @@ export function DownloadButton({
       <a
         href={downloadUrl}
         download={fileName ?? true}
+        onClick={() => navigateToInstallSetup(platform)}
         className={`inline-flex items-center justify-center gap-2 rounded-full bg-stone-900 font-medium text-white transition hover:bg-stone-800 ${sizeClasses}`}
       >
         <DownloadIcon className={size === "sm" ? "h-4 w-4" : "h-5 w-5"} />

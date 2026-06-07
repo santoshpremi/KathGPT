@@ -5,6 +5,7 @@ import { Features } from "./components/Features";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
+import { InstallSetup } from "./components/InstallSetup";
 import { ProductShowcase } from "./components/ProductShowcase";
 import { TechStack } from "./components/TechStack";
 import { TrustBar } from "./components/TrustBar";
@@ -17,6 +18,7 @@ export default function App() {
         <Hero />
         <TrustBar />
         <ProductShowcase />
+        <InstallSetup />
         <TechStack />
         <Features />
         <DownloadSection />

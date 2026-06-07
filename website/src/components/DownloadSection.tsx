@@ -1,5 +1,4 @@
 import { DownloadButton } from "./DownloadButton";
-import { MacOSInstallHelp } from "./MacOSInstallHelp";
 import { PlatformDownloads } from "./PlatformDownloads";
 import { SITE } from "../lib/site";
 
@@ -12,15 +11,21 @@ export function DownloadSection() {
           <h2 className="section-title mt-3">Download KathaGPT</h2>
           <p className="section-body mt-4">
             macOS builds are ready for Apple Silicon and Intel. Linux AppImage
-            is available below. Windows is coming soon.
+            is available below. Windows is coming soon. After downloading, you&apos;ll
+            be taken to{" "}
+            <a
+              href="#install-setup"
+              className="font-medium text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-500"
+            >
+              Install Setup
+            </a>{" "}
+            for next steps.
           </p>
         </div>
 
         <div className="mx-auto mt-10 flex flex-col items-center">
           <DownloadButton size="lg" showMeta className="w-full max-w-md" />
         </div>
-
-        <MacOSInstallHelp />
 
         <div className="mt-10">
           <PlatformDownloads />

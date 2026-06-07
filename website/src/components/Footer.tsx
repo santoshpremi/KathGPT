@@ -12,6 +12,9 @@ export function Footer() {
           <a href="#product" className="hover:text-stone-900">
             Product
           </a>
+          <a href="#install-setup" className="hover:text-stone-900">
+            Install Setup
+          </a>
           <a href="#tech" className="hover:text-stone-900">
             Rust
           </a>

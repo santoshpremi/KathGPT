@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { navigateToInstallSetup } from "../lib/install";
 import {
   fetchDownloadManifest,
   fetchLatestRelease,
@@ -38,6 +39,7 @@ export function PlatformDownloads() {
             key={p.id}
             href={href!}
             download
+            onClick={() => navigateToInstallSetup(p.id)}
             className="flex items-center justify-between rounded-xl border border-stone-200 bg-white px-5 py-4 text-sm text-stone-900 transition hover:border-stone-300"
           >
             <span className="font-medium">{p.label}</span>
