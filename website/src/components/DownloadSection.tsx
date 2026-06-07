@@ -16,15 +16,15 @@ export function DownloadSection() {
           </p>
         </div>
 
-        <div className="mt-10">
-          <PlatformDownloads />
-        </div>
-
         <div className="mx-auto mt-10 flex flex-col items-center">
           <DownloadButton size="lg" showMeta className="w-full max-w-md" />
         </div>
 
         <MacOSInstallHelp />
+
+        <div className="mt-10">
+          <PlatformDownloads />
+        </div>
 
         <div className="surface-card mx-auto mt-12 max-w-2xl p-6">
           <h3 className="font-semibold text-stone-900">System requirements</h3>

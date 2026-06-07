@@ -1,5 +1,4 @@
 import { DownloadButton } from "./DownloadButton";
-import { PlatformDownloads } from "./PlatformDownloads";
 import { MODEL_PROVIDERS } from "../lib/providers";
 import { SITE } from "../lib/site";
 
@@ -48,10 +47,8 @@ export function Hero() {
             <DownloadButton size="lg" showMeta className="min-w-[260px]" />
           </div>
 
-          <PlatformDownloads variant="hero" />
-
           <p className="mt-6 text-sm text-stone-500">
-            {SITE.license} License · Data stays on your device
+            macOS · Windows · Linux · {SITE.license} License
           </p>
         </div>
       </div>

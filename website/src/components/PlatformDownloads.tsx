@@ -10,11 +10,7 @@ import {
   type GitHubRelease,
 } from "../lib/site";
 
-interface PlatformDownloadsProps {
-  variant?: "grid" | "hero";
-}
-
-export function PlatformDownloads({ variant = "grid" }: PlatformDownloadsProps) {
+export function PlatformDownloads() {
   const [manifest, setManifest] = useState<DownloadManifest | null>(null);
   const [release, setRelease] = useState<GitHubRelease | null>(null);
 
@@ -26,45 +22,6 @@ export function PlatformDownloads({ variant = "grid" }: PlatformDownloadsProps) 
       },
     );
   }, []);
-
-  if (variant === "hero") {
-    return (
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
-        {PLATFORMS.map((p) => {
-          const hosted = manifest?.platforms[p.id];
-          const releaseAsset = release ? matchAsset(release.assets, p.id) : null;
-          const href = hosted
-            ? hostedDownloadUrl(hosted)
-            : releaseAsset?.browser_download_url ?? null;
-          const ready = Boolean(href);
-
-          if (ready) {
-            return (
-              <a
-                key={p.id}
-                href={href!}
-                download
-                className="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-stone-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-stone-800"
-              >
-                {p.shortLabel}
-                <span className="text-xs text-stone-300">Download</span>
-              </a>
-            );
-          }
-
-          return (
-            <span
-              key={p.id}
-              className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-stone-50 px-4 py-2 text-sm text-stone-500"
-            >
-              {p.shortLabel}
-              <span className="text-xs">Coming soon</span>
-            </span>
-          );
-        })}
-      </div>
-    );
-  }
 
   return (
     <div className="mx-auto grid max-w-3xl gap-3 sm:grid-cols-2">
