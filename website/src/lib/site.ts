@@ -73,7 +73,7 @@ export const PLATFORMS: PlatformDownload[] = [
     label: "Linux",
     shortLabel: "Linux",
     extensions: [".AppImage", ".deb", ".rpm"],
-    keywords: ["linux", "appimage", "deb"],
+    keywords: ["linux", "appimage", "deb", "amd64", "_amd64"],
   },
 ];
 
