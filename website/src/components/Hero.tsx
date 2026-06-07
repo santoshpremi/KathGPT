@@ -1,4 +1,6 @@
 import { DownloadButton } from "./DownloadButton";
+import { PlatformDownloads } from "./PlatformDownloads";
+import { MODEL_PROVIDERS } from "../lib/providers";
 import { SITE } from "../lib/site";
 
 export function Hero() {
@@ -18,12 +20,38 @@ export function Hero() {
             {SITE.description}
           </p>
 
+          <p
+            className="mt-8 text-base text-stone-600 md:text-lg"
+            aria-label="Supported model providers"
+          >
+            {MODEL_PROVIDERS.map((provider, index) => (
+              <span key={provider}>
+                <span
+                  className={
+                    provider === "Others"
+                      ? "text-stone-400"
+                      : "font-medium text-stone-800"
+                  }
+                >
+                  {provider}
+                </span>
+                {index < MODEL_PROVIDERS.length - 1 && (
+                  <span className="mx-2 text-stone-300" aria-hidden>
+                    /
+                  </span>
+                )}
+              </span>
+            ))}
+          </p>
+
           <div className="mt-10 flex justify-center">
             <DownloadButton size="lg" showMeta className="min-w-[260px]" />
           </div>
 
+          <PlatformDownloads variant="hero" />
+
           <p className="mt-6 text-sm text-stone-500">
-            macOS · Windows · Linux · {SITE.license} License
+            {SITE.license} License · Data stays on your device
           </p>
         </div>
       </div>

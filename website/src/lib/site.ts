@@ -2,7 +2,7 @@ export const SITE = {
   name: "KathGPT",
   tagline: "Fast, private AI — powered by Rust",
   description:
-    "A native desktop app with a Rust backend and React UI. Bring your own API key, stream from GPT / Claude / Gemini, and keep every conversation on your device.",
+    "A native desktop app with a Rust backend. Connect OpenRouter, Perplexity, GPT, Claude, Gemini, or your own provider — and keep every conversation on your device.",
   githubRepo: import.meta.env.VITE_GITHUB_REPO ?? "santoshpremi/KathGPT",
   license: "MIT",
   version: "0.1.0",
