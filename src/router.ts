@@ -38,7 +38,7 @@ export type Params = {
   '/:organizationId/workflows/:workflowId': { organizationId: string; workflowId: string }
 }
 
-export type ModalPath = `/[organizationId]/tools/profileSettings` | `/[organizationId]/tools/techSupport/analytics` | `/addModels` | `/apiKeys` | `/feedback`
+export type ModalPath = `/[organizationId]/tools/profileSettings` | `/[organizationId]/tools/techSupport/analytics` | `/addModels` | `/apiKeys` | `/feedback` | `/localModels`
 
 export const { Link, Navigate } = components<Path, Params>()
 export const { useModals, useNavigate, useParams } = hooks<Path, Params, ModalPath>()

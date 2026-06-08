@@ -40,6 +40,19 @@ pub async fn stream_completion(
                 )
                 .await?)
             }
+            ModelRoute::Local { model } => {
+                // Boot the sidecar (or switch models) then call its OpenAI-compat API
+                super::sidecar::ensure_running(&model).await?;
+                Ok(stream_openai_compatible(
+                    &format!("{}/v1/chat/completions", super::sidecar::SIDECAR_BASE_URL),
+                    "local",   // llama-server ignores the Bearer token
+                    &model,
+                    options,
+                    None,
+                    None,
+                )
+                .await?)
+            }
             ModelRoute::Direct { provider, slug } => {
                 let key = effective_key(pool, &provider)
                     .await?

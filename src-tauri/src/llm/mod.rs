@@ -1,6 +1,10 @@
 pub mod image_gen;
+pub mod model_catalog;
+pub mod model_dl;
 pub mod models;
+pub mod ollama;
 pub mod research;
+pub mod sidecar;
 pub mod translate;
 pub mod translate_file;
 pub mod openrouter;

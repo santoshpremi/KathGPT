@@ -13,12 +13,17 @@ import type { ModelOverride } from "@backend/api/chat/chatTypes";
 import type { LlmName } from "@backend/ai/llmMeta";
 import { LLM_META } from "@backend/ai/llmMeta";
 import type { ModelProviderGroup } from "@backend/ai/modelProviderGroups";
-import { useProviderKeyStatus } from "../../../lib/api/rust";
+import {
+  useLocalModelsStatus,
+  useProviderKeyStatus,
+} from "../../../lib/api/rust";
 import type { ProviderId } from "../../../lib/api/rust/types";
 import { useEnabledChatModelsStore } from "../../../lib/context/enabledChatModelsStore";
 import {
   DYNAMIC_PROVIDER_IDS,
+  isLocalModelId,
   isProviderModelId,
+  parseLocalModelId,
   parseProviderModelId,
 } from "../../../lib/provider/modelIds";
 import { useTranslation } from "../../../lib/i18n";
@@ -79,6 +84,9 @@ function modelLabel(
   getLabel: (id: string) => string | undefined,
 ) {
   if (model === "automatic") return t("modelMeta.automatic");
+  if (isLocalModelId(model)) {
+    return getLabel(model) ?? parseLocalModelId(model)?.slug ?? model;
+  }
   if (isProviderModelId(model)) {
     return getLabel(model) ?? parseProviderModelId(model)?.slug ?? model;
   }
@@ -218,6 +226,33 @@ function UnconfiguredProviderRow({ provider }: { provider: ProviderId }) {
   );
 }
 
+function UnconfiguredLocalModelsRow() {
+  const { t } = useTranslation();
+  const modals = useModals();
+
+  return (
+    <Box sx={{ mt: 0.5 }}>
+      <Typography level="body-xs" sx={sectionHeaderSx}>
+        {t("localModelsModal.sectionTitle")}
+      </Typography>
+      <MenuItem
+        onClick={() => modals.open("/localModels")}
+        sx={{
+          borderRadius: "8px",
+          py: 1.125,
+          px: 1.5,
+          minHeight: 40,
+          color: "#c5c5d0",
+          fontWeight: 400,
+          "&:hover": { bgcolor: "#f3f3f3", color: "#0d0d0d" },
+        }}
+      >
+        {t("modelSelector.addLocalModel")}
+      </MenuItem>
+    </Box>
+  );
+}
+
 export function InlineModelSelector({
   selectedModel,
   setSelectedModel,
@@ -228,6 +263,7 @@ export function InlineModelSelector({
   const { t } = useTranslation();
   const modals = useModals();
   const { isProviderConfigured, keysLoaded } = useProviderKeyState();
+  const { data: sidecarStatus } = useLocalModelsStatus();
   const enabledChatModels = useEnabledChatModelsStore((s) => s.enabled);
   const getLabel = useEnabledChatModelsStore((s) => s.getLabel);
 
@@ -245,6 +281,14 @@ export function InlineModelSelector({
     return map;
   }, [enabledChatModels]);
 
+  const enabledLocalModels = useMemo(
+    () => enabledChatModels.filter((id) => isLocalModelId(id)),
+    [enabledChatModels],
+  );
+
+  const showLocalSection =
+    (sidecarStatus?.binaryInstalled || enabledLocalModels.length > 0) && enabledLocalModels.length > 0;
+
   const visibleProviderSections = DYNAMIC_PROVIDER_IDS.filter(
     (provider) =>
       keysLoaded &&
@@ -254,6 +298,7 @@ export function InlineModelSelector({
 
   const selectableModels: SelectableModelId[] = [
     "automatic",
+    ...enabledLocalModels,
     ...visibleProviderSections.flatMap(
       (provider) => enabledByProvider.get(provider) ?? [],
     ),
@@ -300,6 +345,24 @@ export function InlineModelSelector({
             <UnconfiguredProviderRow key={provider} provider={provider} />
           );
         })}
+
+        {!showLocalSection && <UnconfiguredLocalModelsRow />}
+
+        {showLocalSection && (
+          <Box sx={{ mt: 0.5 }}>
+            <Typography level="body-xs" sx={sectionHeaderSx}>
+              {t("localModelsModal.sectionTitle")}
+            </Typography>
+            {enabledLocalModels.map((modelId) => (
+              <ModelMenuItem
+                key={modelId}
+                model={modelId}
+                active={active}
+                onSelect={handleSelect}
+              />
+            ))}
+          </Box>
+        )}
 
         {visibleProviderSections.map((provider) => (
           <Box key={provider} sx={{ mt: 0.5 }}>

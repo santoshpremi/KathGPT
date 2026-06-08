@@ -1,5 +1,11 @@
 const features = [
   {
+    title: "Run AI locally — no key needed",
+    description:
+      "Click 'Add Local Model', pick Llama, Mistral, Gemma, Phi-4, Qwen or DeepSeek, download once, and chat offline forever. 18 curated models up to 16 GB RAM. Metal, CUDA, and CPU all supported.",
+    icon: LocalModelIcon,
+  },
+  {
     title: "Rust-powered core",
     description:
       "Chat streaming, SQLite, LLM routing, research, translation, and image tools all run in a single Rust process — fast, memory-safe, no Node server.",
@@ -14,13 +20,13 @@ const features = [
   {
     title: "Bring your own key",
     description:
-      "Connect OpenRouter, OpenAI, Anthropic, Google, or Perplexity. You control cost and models.",
+      "Connect OpenRouter, OpenAI, Anthropic, Google, or Perplexity. You control cost and models. No key required for local inference.",
     icon: KeyIcon,
   },
   {
     title: "Multi-model chat",
     description:
-      "Switch between GPT, Claude, Gemini, and more mid-conversation with a built-in model picker.",
+      "Switch between local models, GPT, Claude, Gemini, and more mid-conversation with a built-in model picker.",
     icon: SparklesIcon,
   },
   {
@@ -44,7 +50,7 @@ const features = [
   {
     title: "Privacy by design",
     description:
-      "No accounts, no telemetry, no cloud sync. Only LLM API calls leave your machine when you chat.",
+      "No accounts, no telemetry, no cloud sync. Local models never leave your machine. Cloud LLM calls are only made when you choose a cloud provider.",
     icon: LockIcon,
   },
 ];
@@ -56,11 +62,12 @@ export function Features() {
         <div className="mx-auto max-w-2xl text-center">
           <p className="section-label">Why KathaGPT</p>
           <h2 className="section-title mt-3">
-            Everything you need, nothing you don&apos;t
+            Local AI + Cloud AI, in one app
           </h2>
           <p className="section-body mt-4">
-            KathaGPT Local Edition is built for individuals who want powerful AI
-            without giving up ownership of their data.
+            Run powerful AI models on your own hardware — no subscription, no
+            API key, no cloud dependency. Or connect any cloud provider when you
+            need frontier-model power.
           </p>
         </div>
 
@@ -82,6 +89,14 @@ export function Features() {
         </div>
       </div>
     </section>
+  );
+}
+
+function LocalModelIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
+    </svg>
   );
 }
 

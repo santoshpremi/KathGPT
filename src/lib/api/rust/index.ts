@@ -14,6 +14,22 @@ export {
 } from "./hooks/useProviderKeys";
 export { useAvailableModels, useEnabledModels } from "./hooks/useModelConfig";
 export { useProviderModels } from "./hooks/useProviderModels";
+export {
+  useLocalModelsStatus,
+  useInstalledLocalModels,
+  useLocalModelCatalog,
+  useStartModelDownload,
+  usePullLocalModel,
+  useDeleteLocalModel,
+  useDownloadProgress,
+} from "./hooks/useLocalModels";
+export type {
+  SidecarStatus,
+  InstalledLocalModel,
+  CatalogLocalModel,
+  DownloadProgress,
+  DownloadPhase,
+} from "./localModels";
 export { useOpenRouterModels } from "./hooks/useOpenRouterModels";
 export type { ProviderModel } from "./providerModels";
 export type { OpenRouterModel } from "./openrouterModels";

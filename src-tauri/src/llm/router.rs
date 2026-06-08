@@ -6,6 +6,7 @@ use crate::db::repos::provider_keys::{effective_key, has_any_stored_provider, ha
 pub enum ModelRoute {
     OpenRouter { slug: String },
     Direct { provider: String, slug: String },
+    Local { model: String },
 }
 
 pub async fn resolve_generation_model(
@@ -49,6 +50,10 @@ pub async fn get_available_models(pool: &SqlitePool) -> anyhow::Result<Vec<Strin
     Ok(out)
 }
 
+fn parse_local_model(model: &str) -> Option<&str> {
+    model.strip_prefix("local:").filter(|slug| !slug.is_empty())
+}
+
 fn parse_prefixed_provider_model(model: &str) -> Option<(&str, &str)> {
     for provider in ["openrouter", "openai", "anthropic", "gemini", "perplexity"] {
         let prefix = format!("{provider}:");
@@ -65,6 +70,16 @@ pub async fn resolve_model_route(
     pool: &SqlitePool,
     model: &str,
 ) -> anyhow::Result<Option<ModelRoute>> {
+    if let Some(local_model) = parse_local_model(model) {
+        // Route through sidecar regardless of whether it's currently running —
+        // the stream handler will call ensure_running which boots it on demand.
+        if super::sidecar::model_downloaded(local_model) {
+            return Ok(Some(ModelRoute::Local {
+                model: local_model.to_string(),
+            }));
+        }
+    }
+
     if let Some((provider, slug)) = parse_prefixed_provider_model(model) {
         if effective_key(pool, provider).await?.is_some() {
             if provider == "openrouter" {

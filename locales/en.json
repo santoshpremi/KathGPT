@@ -175,8 +175,26 @@
   },
   "modelSelector": {
     "addKeyForProvider": "Add {{provider}} key",
+    "addLocalModel": "Add Local Model",
     "addModel": "Add model",
     "noProviders": "Add API keys to unlock more models"
+  },
+  "localModelsModal": {
+    "title": "Add Local Model",
+    "sectionTitle": "Local Models",
+    "description": "Download AI models that run fully on your device — no API key, no internet after download.",
+    "searchPlaceholder": "Search models…",
+    "installedSection": "DOWNLOADED MODELS",
+    "catalogSection": "AVAILABLE MODELS",
+    "installed": "Downloaded",
+    "download": "Download",
+    "downloaded": "Downloaded",
+    "downloadSuccess": "{{name}} is ready to use",
+    "downloadFailed": "Download failed. Please try again.",
+    "delete": "Delete model",
+    "deleteSuccess": "Model deleted",
+    "noInstalled": "No local models yet — download one below.",
+    "noSearchResults": "No models match your search."
   },
   "addModelsModal": {
     "title": "Add models",
@@ -526,7 +544,8 @@
     "tabs": {
       "metrics": "Metrics"
     },
-    "apiKeys": "API Keys"
+    "apiKeys": "API Keys",
+    "addLocalModel": "Add Local Model"
   },
   "apiKeysModal": {
     "title": "API Keys",

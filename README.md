@@ -1,6 +1,6 @@
 # KathaGPT Local Edition
 
-**Fast, private AI chat on your machine — powered by Rust.** Bring your own API key; conversations, workflows, and settings stay on your device.
+**Fast, private AI chat on your machine — powered by Rust.** Run local AI models with no API key, or bring your own for cloud providers. Every conversation stays on your device.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![GitHub](https://img.shields.io/github/stars/santoshpremi/KathaGPT?style=social)](https://github.com/santoshpremi/KathaGPT)
@@ -8,59 +8,95 @@
 | | |
 |---|---|
 | **Version** | 0.1.0 |
-| **Stack** | React · **Rust (Axum)** · Tauri v2 · SQLite |
+| **Stack** | React · **Rust (Axum)** · Tauri v2 · SQLite · llama.cpp |
 | **Platforms** | macOS · Windows · Linux |
 | **Repo** | [github.com/santoshpremi/KathaGPT](https://github.com/santoshpremi/KathaGPT) |
-| **Website** | [Marketing site](website/) · deploy via GitHub Pages |
+| **Website** | [santoshpremi.github.io/KathaGPT](https://santoshpremi.github.io/KathaGPT/) |
+
+---
+
+## Full Local LLM Support — No API key required
+
+> Click **Add Local Model** → search → **Download** → chat. No terminal, no Ollama, no external installs.
+
+KathaGPT downloads and runs AI models entirely on your machine using a built-in **llama.cpp engine**. The runtime binary (~15 MB) and `.gguf` model files are fetched on demand — the installer stays compact.
+
+### How it works
+
+```
+Open KathaGPT
+  → Click "Add Local Model" in the user menu
+  → Browse or search 18 curated models (Llama, Mistral, Gemma, Phi, Qwen, DeepSeek…)
+  → Click Download on e.g. "Llama 3.2 3B"
+  → Progress bar: downloads llama-server runtime + .gguf from HuggingFace
+  → Model appears in the chat picker
+  → Chat offline, forever — no API key needed
+```
+
+### Available models (18 curated — up to 16 GB RAM)
+
+| RAM | Models |
+|-----|--------|
+| **2–4 GB** | Llama 3.2 1B · Gemma 2 2B · Llama 3.2 3B · Phi-3 Mini 3.8B · Qwen 3 4B |
+| **8 GB** | Mistral 7B v0.3 · Llama 3.1 8B · Qwen 2.5 7B · Qwen 3 8B · DeepSeek R1 7B · Gemma 2 9B |
+| **12 GB** | Gemma 3 12B · Mistral Nemo 12B · Phi-4 14B · Qwen 2.5 14B · Qwen 3 14B · DeepSeek R1 14B |
+| **16 GB** | Mistral Small 22B · Qwen 2.5 32B |
+
+All models are Q4_K_M quantized `.gguf` files sourced from [bartowski](https://huggingface.co/bartowski) and official repos on HuggingFace. GPU acceleration is automatic — **Metal on Apple Silicon**, CUDA on NVIDIA, CPU fallback everywhere.
 
 ---
 
 ## Powered by Rust
 
-KathaGPT’s backend is **100% Rust** — the old Node.js server is gone. One native core handles everything that matters for speed and privacy:
+KathaGPT's backend is **100% Rust** — the old Node.js server is gone. One native core handles everything:
 
 | Benefit | How |
 |---------|-----|
-| **Low overhead** | Axum API embedded in the Tauri process — no separate Node runtime, no Electron Chromium bundle |
-| **Fast streaming** | SSE token streams parsed in Rust (`reqwest` + Tokio) with minimal latency between provider and UI |
+| **Low overhead** | Axum API embedded in the Tauri process — no Node runtime, no Electron Chromium bundle |
+| **Fast streaming** | SSE token streams parsed in Rust (`reqwest` + Tokio) with minimal latency |
 | **Efficient storage** | SQLite via `sqlx` — instant chat history, workflows, and settings on disk |
-| **Memory safety** | Rust catches data races and use-after-free at compile time; fewer crashes around your local data |
-| **Small desktop app** | Tauri uses the OS WebView → smaller installers and lower RAM than typical Electron AI clients |
+| **Memory safety** | Rust catches data races and use-after-free at compile time |
+| **Small installer** | Tauri uses the OS WebView → smaller installers, lower RAM than Electron |
 | **Loopback-only API** | Server binds `127.0.0.1:17890` — not exposed to your LAN |
 
 ```
-┌─────────────────────────────────────────────┐
-│  KathaGPT.app / .exe / .AppImage             │
-│  ┌───────────────────────────────────────┐  │
-│  │  Tauri (Rust)                         │  │
-│  │  • Native window + system tray        │  │
-│  │  • Axum API · SQLite · LLM routing    │  │
-│  │  • WebView → React UI (dist/)         │  │
-│  └───────────────────────────────────────┘  │
-└─────────────────────────────────────────────┘
-          │ HTTPS (only when you chat)
-          ▼
-   OpenRouter / OpenAI / Anthropic / Gemini / Perplexity
+┌──────────────────────────────────────────────────┐
+│  KathaGPT.app / .exe / .AppImage                  │
+│  ┌────────────────────────────────────────────┐   │
+│  │  Tauri (Rust)                              │   │
+│  │  • Native window + system tray             │   │
+│  │  • Axum API · SQLite · LLM routing         │   │
+│  │  • llama-server sidecar (local models)     │   │
+│  │  • WebView → React UI (dist/)              │   │
+│  └────────────────────────────────────────────┘   │
+└──────────────────────────────────────────────────┘
+       │ Local inference (127.0.0.1:11435)
+       ▼
+  llama-server (llama.cpp) — Metal / CUDA / CPU
+
+       │ HTTPS (only when you use a cloud model)
+       ▼
+  OpenRouter / OpenAI / Anthropic / Gemini / Perplexity
 ```
 
 ---
 
 ## Why KathaGPT?
 
-- **Local-first** — Chats and app data live in SQLite on your machine, not on a remote server.
-- **BYOK** — Connect OpenRouter, OpenAI, Anthropic, Gemini, or Perplexity with keys you control.
-- **Protected keys** — API keys stay local; masked in the UI. See [SECURITY.md](SECURITY.md) for storage details.
-- **Native desktop** — One-click `.dmg` / `.msi` / `.AppImage` installers; also runs in the browser during development.
-- **Open source** — MIT licensed; inspect, fork, and self-host the stack.
+- **Truly local** — Run Llama, Mistral, Phi-4, Qwen, DeepSeek and more with zero API keys.
+- **BYOK cloud** — Also connects to OpenRouter, OpenAI, Anthropic, Gemini, Perplexity.
+- **Protected keys** — API keys stored locally, masked in UI. See [SECURITY.md](SECURITY.md).
+- **Native desktop** — One-click `.dmg` / `.msi` / `.AppImage`; no Electron overhead.
+- **Open source** — MIT licensed; inspect, fork, and self-host.
 
 ### What's included
 
 | Area | Features |
 |------|----------|
-| **Chat** | Streaming responses, multi-model picker, artifacts, draft chats (no empty saves) |
-| **Tools** | Research assistant (Sonar + citations), image generator, translator, meeting notes, tech support |
-| **Productivity** | Workflows, prompt library (10 best practices + saved prompts), JSON export/import |
-| **Data** | Legacy `.data/dev-store.json` auto-migration on first launch |
+| **Local LLM** | 18 one-click models, Metal/CUDA GPU acceleration, llama.cpp sidecar, real-time download progress |
+| **Chat** | Streaming responses, multi-model picker, artifacts, draft chats |
+| **Tools** | Research assistant (Sonar + citations), image generator, translator, meeting notes |
+| **Productivity** | Workflows, prompt library, JSON export/import |
 
 ---
 
@@ -87,7 +123,7 @@ pnpm install
 
 Open **http://localhost:5173** — the Rust API runs on **http://127.0.0.1:17890** (proxied as `/api/local`).
 
-### 2. Add an API key
+### 2. Add an API key (optional)
 
 Copy the example env file and add at least one provider key:
 
@@ -95,16 +131,18 @@ Copy the example env file and add at least one provider key:
 cp .env.example .env
 ```
 
-Or add keys in the app: **Settings → API Keys**. OpenRouter is recommended for the broadest model access.
+Or add keys in the app: **Settings → API Keys**. OpenRouter is recommended for the broadest cloud model access.
 
-### 3. Desktop app (optional)
+> **No key needed for local models.** Just click **Add Local Model** and download one.
+
+### 3. Desktop app
 
 ```bash
 pnpm tauri:dev          # dev with native window
 pnpm tauri:build        # production installer (.dmg / .msi / .AppImage)
 ```
 
-**macOS install (unsigned build):** Download from [the website](https://santoshpremi.github.io/KathaGPT/) or build locally. If macOS shows *“could not verify”*, the browser added a quarantine flag — this is expected without Apple notarization ($99/yr Developer ID).
+**macOS install (unsigned build):** Download from [the website](https://santoshpremi.github.io/KathaGPT/) or build locally. If macOS shows *"could not verify"*, the browser added a quarantine flag — this is expected without Apple notarization ($99/yr Developer ID).
 
 1. **Terminal (recommended):** After downloading the `.dmg` to `~/Downloads`, run the one-liner on the [download page](https://santoshpremi.github.io/KathaGPT/#download), or:
    ```bash
@@ -141,6 +179,8 @@ To ship notarized builds from CI, add GitHub secrets: `APPLE_CERTIFICATE`, `APPL
 | Windows | `%APPDATA%\KathaGPT\kathagpt.db` |
 | Linux | `~/.local/share/KathaGPT/kathagpt.db` |
 
+Local model binaries and `.gguf` files are stored in the Tauri app data directory under `bin/` and `models/`.
+
 Health check: `GET http://127.0.0.1:17890/api/local/health`
 
 ### Project layout
@@ -149,6 +189,10 @@ Health check: `GET http://127.0.0.1:17890/api/local/health`
 KathaGPT/
 ├── src/                 # React UI (Vite + MUI)
 ├── src-tauri/           # Rust API, LLM routing, SQLite, Tauri shell
+│   └── src/llm/
+│       ├── sidecar.rs       # llama-server lifecycle manager
+│       ├── model_catalog.rs # curated model list with HF URLs
+│       └── model_dl.rs      # async download + SSE progress
 ├── website/             # Marketing landing page (separate Vite app)
 ├── migrations/          # SQLite schema
 ├── test/e2e/            # Playwright tests
@@ -222,6 +266,19 @@ All routes are under `/api/local`. The Node.js backend has been removed — ever
 </details>
 
 <details>
+<summary><strong>Local models</strong></summary>
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/local-models/status` | Sidecar status + downloaded models |
+| `GET` | `/local-models/catalog` | Full model catalog (18 models) |
+| `POST` | `/local-models/download` | Start background download (binary + .gguf) |
+| `GET` | `/local-models/progress` | SSE stream: real-time download progress |
+| `DELETE` | `/local-models/{name}` | Delete a downloaded model |
+
+</details>
+
+<details>
 <summary><strong>Tools</strong></summary>
 
 | Method | Endpoint | Description |
@@ -252,9 +309,9 @@ CI runs Rust checks (`.github/workflows/rust.yml`), Playwright (`.github/workflo
 
 ## Marketing website
 
-The landing page lives in `website/` — Rust performance section, features, FAQ, and GitHub Releases download buttons.
+The landing page lives in `website/` — features, FAQ, and GitHub Releases download buttons.
 
-**Live site (after Pages deploy):** `https://santoshpremi.github.io/KathaGPT/`
+**Live site:** `https://santoshpremi.github.io/KathaGPT/`
 
 ```bash
 pnpm website:dev        # http://localhost:5174
@@ -264,7 +321,7 @@ pnpm website:preview
 
 Set `VITE_GITHUB_REPO=owner/repo` in `website/.env` (see `website/.env.example`) so download links point at your releases.
 
-**Deploy:** Push to `main`/`master` with `website/**` changes → GitHub Actions builds and deploys to Pages (`.github/workflows/website.yml`). Enable **Settings → Pages → Source: GitHub Actions** once.
+**Deploy:** Push to `main`/`master` → GitHub Actions builds and deploys to Pages (`.github/workflows/website.yml`). Enable **Settings → Pages → Source: GitHub Actions** once.
 
 ### Release checklist
 
@@ -275,78 +332,15 @@ Set `VITE_GITHUB_REPO=owner/repo` in `website/.env` (see `website/.env.example`)
 
 ---
 
-## Open Work · Roadmap
+## Roadmap
 
-High-value areas that would push KathaGPT ahead of competing AI desktop clients.
-
----
-
-### 1 · Core Killer Feature — Full Local LLM Support
-
-> **Biggest gap right now.** KathaGPT is currently BYOK cloud-only. Adding local model support would dominate the privacy-focused market where competitors like [Jan.ai](https://jan.ai), [LM Studio](https://lmstudio.ai), and [Open WebUI](https://openwebui.com) currently win.
-
-#### What to build
-
-| Task | Detail |
-|------|--------|
-| **Ollama integration** | Auto-detect a running Ollama instance (`http://localhost:11434`); enumerate available models via the Ollama REST API; stream responses through the existing SSE pipeline — no new UI paradigm needed |
-| **llama.cpp via Rust** | For fully embedded inference: evaluate [`llama-rs`](https://github.com/rustformers/llama.cpp-rs), [`candle`](https://github.com/huggingface/candle) (HuggingFace), or a Tauri sidecar wrapping `llama-server` — sidecar is lowest risk to start |
-| **Model manager** | UI to download, quantize (Q4/Q8), and delete local models; hardware detection (VRAM, Apple Neural Engine, CPU cores) to recommend sensible defaults |
-| **Hybrid mode** | Seamlessly route individual messages to either local or cloud models within the same chat thread; useful for cost-sensitive workflows where cheap/fast tasks stay local while complex reasoning hits a cloud frontier model |
-| **Hardware detection** | Read GPU info (Metal on macOS, CUDA/ROCm on Linux/Windows) and surface it in Settings → guide users to the best quant level for their machine |
-
-#### Why this matters
-
-- Users who care most about privacy cannot be served by cloud-only clients at all — this is a complete market segment currently unreachable.
-- Offline capability turns KathaGPT into a tool that works on planes, air-gapped networks, and corporate environments that block outbound LLM traffic.
-- Local model support is the single feature that most separates "chat wrapper" from "serious AI desktop app" in community perception.
-
----
-
-### 2 · Technical & Performance Upgrades
-
-#### Rust backend
-
-| Improvement | Detail | Why it matters |
-|-------------|--------|----------------|
-| **Context window management** | Track token counts per model, auto-truncate oldest messages when the context limit approaches, expose remaining tokens in the UI | Prevents silent truncation errors and unexpected costs on long conversations |
-| **Token counting** | Implement tiktoken-rs or call provider `/tokenize` endpoints; show live token usage per message and per chat | Power users need this for budget control |
-| **Smart truncation strategies** | Sliding window, summary compression, or pinned-system-prompt modes | Improves response quality on long threads |
-| **Structured error surface** | Map provider error codes (rate limit, context exceeded, invalid key) to user-friendly messages in the UI instead of raw JSON | Reduces support burden |
-
-#### Tauri / native shell
-
-| Improvement | Detail | Why it matters |
-|-------------|--------|----------------|
-| **System tray enhancements** | Quick-compose window from tray, show/hide with a single click, unread indicator | Native app feel; comparable to Raycast / Alfred integrations |
-| **Global hotkeys** | Register a system-wide shortcut (e.g. `⌘⇧Space`) to summon the chat window from any app | One of the most-requested features in competing tools |
-| **Auto-updater** | Tauri's built-in `tauri-plugin-updater` + GitHub Releases JSON feed | Eliminates manual re-download on every release |
-| **Windows / Linux parity** | Test installer flows on Windows (`.msi`) and Linux (`.AppImage`) equivalents of the macOS setup scripts | Needed before any broad release |
-
-#### UI / UX polish
-
-| Improvement | Detail | Why it matters |
-|-------------|--------|----------------|
-| **Dark / light auto-theme** | Follow `prefers-color-scheme`; persist user override in SQLite settings | Expected baseline for any desktop app in 2025 |
-| **Markdown + LaTeX rendering** | Render `$$...$$` and `$...$` inline math (KaTeX or MathJax); already using markdown, this is a one-package add | Essential for research, academic, and STEM users |
-| **Code highlighting + copy** | Syntax highlight code fences (`highlight.js` / `shiki`); one-click copy button per block | High-frequency action in every developer workflow |
-| **Better sidebar** | Collapsible, mobile-like navigation drawer; section headers for Today / This Week / Older in chat history | Reduces visual noise; scales to hundreds of chats |
-
-#### Memory & RAG
-
-| Improvement | Detail | Why it matters |
-|-------------|--------|----------------|
-| **Built-in vector search** | Add [`sqlite-vec`](https://github.com/asg017/sqlite-vec) extension (pure SQLite, no extra service) for semantic search over chat history and uploaded documents | Huge differentiator for power users — no Pinecone/Chroma dependency |
-| **Long-term memory** | Summarise older conversations and store embeddings; surface relevant context automatically when starting a new chat on the same topic | Replaces the manual "start with context" workflow |
-| **Document chat (RAG)** | Upload PDF / text → chunk → embed → retrieve at query time; already have a file extraction endpoint (`/files/extract-text`) to build on | Closes the gap with tools like Notion AI and ChatPDF |
-
-#### Agents & workflows
-
-| Improvement | Detail | Why it matters |
-|-------------|--------|----------------|
-| **Tool calling** | Expose model tool-call results (web search, code execution, file read/write) through the existing workflow engine | Required for any agentic loop |
-| **Multi-step ReAct loops** | Let the Rust backend iterate model → tool → model until a stopping condition; surface intermediate steps in the UI | Turns KathaGPT into a local Cursor/Devin competitor for simple tasks |
-| **Workflow marketplace** | Allow exporting and importing community workflows as JSON; host a small curated gallery on the website | Viral growth mechanism — users share useful automations |
+| Area | Next steps |
+|------|-----------|
+| **Local LLM** | Hardware detection (VRAM/RAM), auto-recommend quant level, delete model from UI |
+| **Context** | Token counter, smart truncation, remaining-tokens indicator |
+| **Desktop** | Global hotkey (`⌘⇧Space`), auto-updater, system tray quick-compose |
+| **Memory & RAG** | `sqlite-vec` vector search, document chat (PDF → chunks → embed) |
+| **Agents** | Tool calling, multi-step ReAct loops, workflow marketplace |
 
 ---
 

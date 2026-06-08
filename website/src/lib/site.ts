@@ -1,8 +1,8 @@
 export const SITE = {
   name: "KathaGPT",
-  tagline: "Fast, private AI — powered by Rust",
+  tagline: "Private AI — local models + cloud, powered by Rust",
   description:
-    "A native desktop app with a Rust backend. Connect OpenRouter, Perplexity, GPT, Claude, Gemini, or your own provider — and keep every conversation on your device.",
+    "Run Llama, Mistral, Gemma, Phi and more locally with one click — no API key needed. Or connect OpenRouter, GPT, Claude, Gemini, and Perplexity. Every conversation stays on your device.",
   githubRepo: import.meta.env.VITE_GITHUB_REPO ?? "santoshpremi/KathaGPT",
   license: "MIT",
   version: "0.1.0",

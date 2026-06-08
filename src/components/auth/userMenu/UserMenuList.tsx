@@ -1,4 +1,4 @@
-import { SettingsOutlined, Code } from "@mui/icons-material";
+import { SettingsOutlined, Code, Memory } from "@mui/icons-material";
 import { type ColorPaletteProp } from "@mui/joy/styles";
 import { useApiKeysEnabled } from "../../../lib/api/localHooks";
 import {
@@ -73,6 +73,12 @@ export function UserMenuList({
           icon: <Code color="primary" />,
           doesRender: !!apiKeysEnabled,
           modalPath: "/apiKeys",
+        },
+        {
+          label: t("settings.addLocalModel"),
+          icon: <Memory color="primary" />,
+          doesRender: true,
+          modalPath: "/localModels",
         },
         {
           label: t("settings.title"),

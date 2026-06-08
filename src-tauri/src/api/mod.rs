@@ -1,5 +1,6 @@
 pub mod artifacts;
 pub mod chats;
+pub mod local_models;
 pub mod documents;
 pub mod data;
 pub mod files;
@@ -17,7 +18,8 @@ use axum::Router;
 use crate::server::AppState;
 
 pub fn routes() -> Router<AppState> {
-    provider_keys::routes()
+    local_models::routes()
+        .merge(provider_keys::routes())
         .merge(user::routes())
         .merge(chats::routes())
         .merge(messages::routes())

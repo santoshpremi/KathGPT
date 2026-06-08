@@ -10,7 +10,7 @@ export function Hero() {
           <p className="section-label">Open source desktop app</p>
 
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl md:text-6xl lg:text-[4.25rem] lg:leading-[1.05]">
-            Private AI workspace,
+            Local AI + Cloud AI,
             <br />
             built for your desktop
           </h1>
@@ -48,7 +48,7 @@ export function Hero() {
           </div>
 
           <p className="mt-6 text-sm text-stone-500">
-            macOS · Windows · Linux · {SITE.license} License
+            macOS · Windows · Linux · {SITE.license} License · Local models need no API key
           </p>
         </div>
       </div>

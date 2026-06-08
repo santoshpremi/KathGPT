@@ -52,6 +52,10 @@ keyring = "3"
 pdf-extract = "0.10"
 printpdf = "0.7"
 rfd = "0.15"
+zip = { version = "2", default-features = false, features = ["deflate"] }
+flate2 = "1"
+tar = "0.4"
+dashmap = "6"
 
 [profile.release]
 panic = "abort"

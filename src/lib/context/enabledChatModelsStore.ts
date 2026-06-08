@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { ProviderModel } from "../api/rust/providerModels";
 import type { ProviderId } from "../api/rust/types";
-import { toProviderModelId } from "../provider/modelIds";
+import { toLocalModelId, toProviderModelId } from "../provider/modelIds";
 
 interface EnabledChatModelsStore {
   enabled: string[];
@@ -11,6 +11,7 @@ interface EnabledChatModelsStore {
   setEnabled: (modelId: string, on: boolean) => void;
   toggle: (modelId: string) => void;
   syncProviderLabels: (provider: ProviderId, models: ProviderModel[]) => void;
+  syncLocalLabels: (models: { name: string; displayName: string }[]) => void;
   getLabel: (modelId: string) => string | undefined;
 }
 
@@ -37,6 +38,14 @@ export const useEnabledChatModelsStore = create<EnabledChatModelsStore>()(
           const next = { ...state.providerLabels };
           for (const model of models) {
             next[toProviderModelId(provider, model.id)] = model.name;
+          }
+          return { providerLabels: next };
+        }),
+      syncLocalLabels: (models) =>
+        set((state) => {
+          const next = { ...state.providerLabels };
+          for (const model of models) {
+            next[toLocalModelId(model.name)] = model.displayName;
           }
           return { providerLabels: next };
         }),

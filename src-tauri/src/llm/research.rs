@@ -168,6 +168,9 @@ pub async fn run_research(
         ModelRoute::Direct { provider, .. } => {
             anyhow::bail!("Research models must use Perplexity or OpenRouter, not {provider}")
         }
+        ModelRoute::Local { .. } => {
+            anyhow::bail!("Local models are not supported for research yet. Use a Perplexity or OpenRouter model.")
+        }
     }
 }
 

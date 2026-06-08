@@ -1,8 +1,8 @@
 export const MODEL_PROVIDERS = [
+  "Local AI",
   "OpenRouter",
-  "Perplexity",
   "GPT",
   "Claude",
   "Gemini",
-  "Others",
+  "Perplexity",
 ] as const;

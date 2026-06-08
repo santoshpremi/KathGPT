@@ -93,6 +93,19 @@ async fn start_backend(handle: &tauri::AppHandle) -> anyhow::Result<()> {
     let port = server::start(state).await?;
     API_PORT.store(port, Ordering::SeqCst);
     info!("KathaGPT Local backend ready on port {port}");
+
+    // Pre-warm: if a local model is already downloaded, start llama-server now
+    // so the user's first chat message responds without a cold-start delay.
+    tokio::spawn(async move {
+        let downloaded = llm::sidecar::list_downloaded_models();
+        if let Some(first) = downloaded.into_iter().next() {
+            info!("Pre-warming llama-server with model: {first}");
+            if let Err(err) = llm::sidecar::ensure_running(&first).await {
+                tracing::warn!("llama-server pre-warm failed (non-fatal): {err}");
+            }
+        }
+    });
+
     Ok(())
 }
 

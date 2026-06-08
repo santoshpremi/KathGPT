@@ -34,6 +34,25 @@ export function isProviderModelId(id: string): boolean {
   return parseProviderModelId(id) !== null;
 }
 
+export const LOCAL_MODEL_PREFIX = "local:" as const;
+
+export function toLocalModelId(slug: string): string {
+  return `${LOCAL_MODEL_PREFIX}${slug}`;
+}
+
+export function parseLocalModelId(
+  id: string,
+): { slug: string } | null {
+  if (!id.startsWith(LOCAL_MODEL_PREFIX)) return null;
+  const slug = id.slice(LOCAL_MODEL_PREFIX.length);
+  if (!slug) return null;
+  return { slug };
+}
+
+export function isLocalModelId(id: string): boolean {
+  return parseLocalModelId(id) !== null;
+}
+
 /** @deprecated Use `toProviderModelId("openrouter", slug)` */
 export const OPENROUTER_MODEL_PREFIX = "openrouter:" as const;
 
