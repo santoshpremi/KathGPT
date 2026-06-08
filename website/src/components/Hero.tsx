@@ -26,11 +26,7 @@ export function Hero() {
             {MODEL_PROVIDERS.map((provider, index) => (
               <span key={provider}>
                 <span
-                  className={
-                    provider === "Others"
-                      ? "text-stone-400"
-                      : "font-medium text-stone-800"
-                  }
+                  className="font-medium text-stone-800"
                 >
                   {provider}
                 </span>
