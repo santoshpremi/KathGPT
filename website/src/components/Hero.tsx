@@ -10,7 +10,7 @@ export function Hero() {
           <p className="section-label">Open source desktop app</p>
 
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl md:text-6xl lg:text-[4.25rem] lg:leading-[1.05]">
-            Local AI + Cloud AI,
+            Private AI workspace,
             <br />
             built for your desktop
           </h1>
