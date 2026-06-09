@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { CTASection } from "./components/CTASection";
 import { DownloadSection } from "./components/DownloadSection";
 import { FAQ } from "./components/FAQ";
@@ -9,10 +10,13 @@ import { InstallSetup } from "./components/InstallSetup";
 import { ProductShowcase } from "./components/ProductShowcase";
 import { TechStack } from "./components/TechStack";
 import { TrustBar } from "./components/TrustBar";
+import { GitHubStarBanner } from "./components/GitHubStarBanner";
 
 export default function App() {
+  const [starBannerVisible, setStarBannerVisible] = useState(false);
+
   return (
-    <div className="min-h-screen">
+    <div className={`min-h-screen${starBannerVisible ? " pb-16" : ""}`}>
       <Header />
       <main>
         <Hero />
@@ -26,6 +30,7 @@ export default function App() {
         <CTASection />
       </main>
       <Footer />
+      <GitHubStarBanner onVisibleChange={setStarBannerVisible} />
     </div>
   );
 }

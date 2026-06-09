@@ -91,8 +91,28 @@ export interface GitHubRelease {
   assets: ReleaseAsset[];
 }
 
+export function getGitHubRepoUrl(): string {
+  return `https://github.com/${SITE.githubRepo}`;
+}
+
 export function getReleasesUrl(): string {
-  return `https://github.com/${SITE.githubRepo}/releases`;
+  return `${getGitHubRepoUrl()}/releases`;
+}
+
+export async function fetchGitHubStarCount(): Promise<number | null> {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${SITE.githubRepo}`,
+      { headers: { Accept: "application/vnd.github+json" } },
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as { stargazers_count?: number };
+    return typeof data.stargazers_count === "number"
+      ? data.stargazers_count
+      : null;
+  } catch {
+    return null;
+  }
 }
 
 export function getLatestReleaseApiUrl(): string {
