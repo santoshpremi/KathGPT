@@ -10,8 +10,8 @@ export function DownloadSection() {
           <p className="section-label">Get started</p>
           <h2 className="section-title mt-3">Download KathaGPT</h2>
           <p className="section-body mt-4">
-            macOS builds are ready for Apple Silicon and Intel. Linux AppImage
-            is available below. Windows is coming soon. After downloading, you&apos;ll
+            Installers for macOS (Apple Silicon & Intel), Windows, and Linux are
+            available below. After downloading, you&apos;ll be taken to{" "}
             be taken to{" "}
             <a
               href="#install-setup"
@@ -48,7 +48,7 @@ export function DownloadSection() {
             </li>
             <li>
               <strong className="text-stone-800">Windows:</strong> 10+ (64-bit) —
-              coming soon
+              NSIS installer available above
             </li>
             <li>
               <strong className="text-stone-800">API key:</strong> OpenRouter

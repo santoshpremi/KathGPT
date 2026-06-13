@@ -7,9 +7,18 @@ import {
   MAC_CURL_INSTALL,
   MAC_QUICK_FIX,
   MAC_SMART_INSTALL,
+  WINDOWS_CURL_INSTALL,
+  WINDOWS_SMART_INSTALL,
 } from "../lib/install";
 
-type CopyKey = "curl" | "smart" | "quick" | "linux-curl" | "linux-smart";
+type CopyKey =
+  | "curl"
+  | "smart"
+  | "quick"
+  | "linux-curl"
+  | "linux-smart"
+  | "windows-curl"
+  | "windows-smart";
 
 export function InstallSetup() {
   const [copied, setCopied] = useState<CopyKey | null>(null);
@@ -38,9 +47,10 @@ export function InstallSetup() {
             Install KathaGPT in seconds
           </h2>
           <p className="section-body mt-4">
-            Two ways to install on macOS — pick the one that suits you.
-            On macOS, Apple blocks unsigned apps until you clear the quarantine flag;
-            both options handle that automatically.
+            Pick your platform below. On macOS, unsigned apps need a quarantine
+            clear — both macOS options handle that automatically. On Windows,
+            SmartScreen may warn for unsigned builds; use{" "}
+            <strong className="text-stone-800">More info → Run anyway</strong>.
           </p>
         </div>
 
@@ -176,27 +186,77 @@ export function InstallSetup() {
             <CopyBlock command={LINUX_SMART_INSTALL} copyKey="linux-smart" copied={copied} onCopy={copy} />
           </div>
 
+          {/* ── Windows ────────────────────────────────────────────────── */}
+          <div id="install-windows" className="surface-card scroll-mt-24 p-6">
+            <div className="flex items-center gap-2">
+              <span className="rounded-full bg-stone-900 px-2.5 py-0.5 text-xs font-semibold text-white">
+                Option A
+              </span>
+              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
+                Windows · Recommended
+              </span>
+            </div>
+            <h3 className="mt-2 text-lg font-semibold text-stone-900">
+              One command — no browser download needed
+            </h3>
+            <p className="mt-1 text-sm text-stone-600">
+              Downloads{" "}
+              <code className="rounded bg-stone-100 px-1 text-xs">{INSTALL_FILES.windows}</code>{" "}
+              and launches the NSIS installer.
+            </p>
+            <ol className="mt-4 list-inside list-decimal space-y-1.5 text-sm text-stone-600">
+              <li>Open PowerShell (Start → type &quot;PowerShell&quot;).</li>
+              <li>Paste the command below and press Enter.</li>
+              <li>Follow the setup wizard, then open KathaGPT from the Start menu.</li>
+            </ol>
+            <CopyBlock command={WINDOWS_CURL_INSTALL} copyKey="windows-curl" copied={copied} onCopy={copy} />
+          </div>
+
+          <div className="surface-card scroll-mt-24 p-6">
+            <div className="flex items-center gap-2">
+              <span className="rounded-full bg-stone-200 px-2.5 py-0.5 text-xs font-semibold text-stone-700">
+                Option B
+              </span>
+              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
+                Windows · Already downloaded the installer?
+              </span>
+            </div>
+            <h3 className="mt-2 text-lg font-semibold text-stone-900">
+              Smart install from your download
+            </h3>
+            <p className="mt-1 text-sm text-stone-600">
+              Finds{" "}
+              <code className="rounded bg-stone-100 px-1 text-xs">KathaGPT*.exe</code>{" "}
+              or{" "}
+              <code className="rounded bg-stone-100 px-1 text-xs">*.msi</code>{" "}
+              in Downloads or Desktop — handles renamed copies.
+            </p>
+            <CopyBlock command={WINDOWS_SMART_INSTALL} copyKey="windows-smart" copied={copied} onCopy={copy} />
+          </div>
+
           {/* ── first launch ───────────────────────────────────────────── */}
           <div className="surface-card p-6">
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
               Final step · First launch
             </p>
             <h3 className="mt-2 text-lg font-semibold text-stone-900">
-              Add your API key
+              Start chatting
             </h3>
             <ol className="mt-4 list-inside list-decimal space-y-2 text-sm text-stone-600">
               <li>
-                Open KathaGPT and go to{" "}
-                <strong className="text-stone-800">Settings → API Keys</strong>.
+                Open KathaGPT from Applications (macOS), the Start menu (Windows),
+                or your app launcher (Linux).
               </li>
               <li>
-                Add an{" "}
-                <strong className="text-stone-800">OpenRouter</strong>{" "}
-                key (recommended) or connect OpenAI, Anthropic, Google, or Perplexity.
+                <strong className="text-stone-800">Local models:</strong> use{" "}
+                <strong className="text-stone-800">Add Local Model</strong> in the
+                user menu — no API key required.
               </li>
               <li>
-                Pick a model and start chatting — your history stays in local SQLite
-                on your device.
+                <strong className="text-stone-800">Cloud models:</strong> go to{" "}
+                <strong className="text-stone-800">Settings → API Keys</strong>{" "}
+                and add OpenRouter (recommended), OpenAI, Anthropic, Google, or
+                Perplexity.
               </li>
             </ol>
           </div>
@@ -219,14 +279,14 @@ export function InstallSetup() {
           >
             install-linux.sh
           </a>{" "}
-          — place your file anywhere, then run{" "}
-          <code className="rounded bg-stone-200/80 px-1.5 py-0.5 text-xs text-stone-800">
-            bash install-macos.sh
-          </code>{" "}
-          /{" "}
-          <code className="rounded bg-stone-200/80 px-1.5 py-0.5 text-xs text-stone-800">
-            bash install-linux.sh
-          </code>
+          ·{" "}
+          <a
+            href={assetUrl("downloads/install-windows.ps1")}
+            download="install-windows.ps1"
+            className="font-medium text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-500"
+          >
+            install-windows.ps1
+          </a>
         </p>
       </div>
     </section>

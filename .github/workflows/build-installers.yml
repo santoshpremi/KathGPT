@@ -10,21 +10,33 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "website/public/downloads/manifest.json"
+      - "website/public/install-windows.ps1"
+      - "website/public/downloads/install-windows.ps1"
       - ".github/workflows/build-installers.yml"
 
 permissions:
   contents: write
 
 concurrency:
-  group: build-installers
-  cancel-in-progress: true
+  group: build-installers-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-22.04
+  build-installer:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            platform: linux
+          - os: windows-latest
+            platform: windows
+
+    runs-on: ${{ matrix.os }}
     env:
       NODE_OPTIONS: --max-old-space-size=8192
       CI: true
+
     steps:
       - uses: actions/checkout@v4
 
@@ -40,6 +52,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
 
       - name: Install Linux deps
+        if: matrix.platform == 'linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
@@ -49,6 +62,7 @@ jobs:
       - run: pnpm tauri build
 
       - name: Publish Linux installer to website
+        if: matrix.platform == 'linux'
         run: |
           set -euo pipefail
           APPIMAGE=$(find src-tauri/target/release/bundle -name '*.AppImage' | head -1)
@@ -74,4 +88,40 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add website/public/downloads/
           git diff --staged --quiet || git commit -m "ci: publish Linux AppImage for website download"
+          git push
+
+      - name: Publish Windows installer to website
+        if: matrix.platform == 'windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          INSTALLER=$(find src-tauri/target/release/bundle -iname '*-setup.exe' 2>/dev/null | head -1 || true)
+          if [ -z "$INSTALLER" ]; then
+            INSTALLER=$(find src-tauri/target/release/bundle -iname '*.msi' 2>/dev/null | head -1 || true)
+          fi
+          if [ -z "$INSTALLER" ]; then
+            echo "No Windows installer found"
+            find src-tauri/target/release/bundle -type f || true
+            exit 1
+          fi
+          BASENAME=$(basename "$INSTALLER")
+          cp "$INSTALLER" "website/public/downloads/$BASENAME"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          manifest_path = Path("website/public/downloads/manifest.json")
+          data = json.loads(manifest_path.read_text())
+          installers = sorted(
+              list(Path("website/public/downloads").glob("*-setup.exe"))
+              + list(Path("website/public/downloads").glob("*.msi"))
+          )
+          if installers:
+              data["platforms"]["windows"] = installers[-1].name
+          manifest_path.write_text(json.dumps(data, indent=2) + "\n")
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add website/public/downloads/
+          git diff --staged --quiet || git commit -m "ci: publish Windows installer for website download"
           git push
