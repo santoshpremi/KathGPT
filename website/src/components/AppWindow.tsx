@@ -13,15 +13,15 @@ export function AppWindow({
 }: AppWindowProps) {
   return (
     <div
-      className={`overflow-hidden rounded-2xl border border-stone-200 bg-white ${className}`}
+      className={`overflow-hidden rounded-2xl border border-stone-800 bg-stone-950 ${className}`}
     >
-      <div className="flex items-center gap-2 border-b border-stone-200 bg-stone-50 px-4 py-3">
-        <span className="h-2.5 w-2.5 rounded-full bg-stone-300" />
-        <span className="h-2.5 w-2.5 rounded-full bg-stone-300" />
-        <span className="h-2.5 w-2.5 rounded-full bg-stone-300" />
-        <span className="ml-3 text-xs font-medium text-stone-500">KathaGPT</span>
+      <div className="flex items-center gap-2 border-b border-stone-800 bg-stone-900/50 px-4 py-3">
+        <span className="h-2.5 w-2.5 rounded-full bg-stone-700" />
+        <span className="h-2.5 w-2.5 rounded-full bg-stone-700" />
+        <span className="h-2.5 w-2.5 rounded-full bg-stone-700" />
+        <span className="ml-3 text-xs font-medium text-stone-400">KathaGPT</span>
       </div>
-      <div className="relative bg-stone-100">
+      <div className="relative bg-stone-950">
         <img
           src={image}
           alt={alt}

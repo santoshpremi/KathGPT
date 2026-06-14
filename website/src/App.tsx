@@ -18,10 +18,10 @@ export default function App() {
         <Hero />
         <TrustBar />
         <ProductShowcase />
-        <InstallSetup />
         <TechStack />
         <Features />
         <DownloadSection />
+        <InstallSetup />
         <FAQ />
         <CTASection />
       </main>

@@ -8,29 +8,29 @@
   }
 
   body {
-    @apply bg-stone-50 text-stone-900 antialiased;
+    @apply bg-stone-950 text-stone-100 antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   ::selection {
-    @apply bg-stone-900/10 text-stone-900;
+    @apply bg-stone-100/10 text-stone-100;
   }
 }
 
 @layer utilities {
   .section-label {
-    @apply text-xs font-medium uppercase tracking-[0.2em] text-stone-500;
+    @apply text-xs font-semibold uppercase tracking-[0.2em] text-stone-400;
   }
 
   .section-title {
-    @apply text-3xl font-semibold tracking-tight text-stone-900 md:text-4xl;
+    @apply text-3xl font-semibold tracking-tight text-white md:text-4xl;
   }
 
   .section-body {
-    @apply text-lg leading-relaxed text-stone-600;
+    @apply text-lg leading-relaxed text-stone-400;
   }
 
   .surface-card {
-    @apply rounded-2xl border border-stone-200 bg-white;
+    @apply rounded-2xl border border-stone-900 bg-stone-900/20 backdrop-blur-sm;
   }
 }

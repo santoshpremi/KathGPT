@@ -8,7 +8,7 @@ export function Logo({ className = "" }: { className?: string }) {
         alt={`${SITE.name} logo`}
         className="h-8 w-8 rounded-xl"
       />
-      <span className="text-lg font-semibold tracking-tight text-stone-900">
+      <span className="text-lg font-semibold tracking-tight text-white">
         {SITE.name}
       </span>
     </a>

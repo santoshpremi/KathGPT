@@ -39,7 +39,7 @@ export function InstallSetup() {
   };
 
   return (
-    <section id="install-setup" className="border-b border-stone-200 bg-stone-50 py-24 md:py-32">
+    <section id="install-setup" className="border-b border-stone-900 bg-stone-900/10 py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-3xl text-center">
           <p className="section-label">Install Setup</p>
@@ -50,7 +50,7 @@ export function InstallSetup() {
             Pick your platform below. On macOS, unsigned apps need a quarantine
             clear — both macOS options handle that automatically. On Windows,
             SmartScreen may warn for unsigned builds; use{" "}
-            <strong className="text-stone-800">More info → Run anyway</strong>.
+            <strong className="text-stone-200">More info → Run anyway</strong>.
           </p>
         </div>
 
@@ -59,22 +59,22 @@ export function InstallSetup() {
           {/* ── macOS: Option A — curl one-liner ───────────────────────── */}
           <div id="install-macos-arm" className="surface-card scroll-mt-24 p-6">
             <div className="flex items-center gap-2">
-              <span className="rounded-full bg-stone-900 px-2.5 py-0.5 text-xs font-semibold text-white">
+              <span className="rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold text-stone-950">
                 Option A
               </span>
-              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
+              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-400">
                 macOS · Recommended
               </span>
             </div>
-            <h3 className="mt-2 text-lg font-semibold text-stone-900">
+            <h3 className="mt-2 text-lg font-semibold text-white">
               One command — no download needed
             </h3>
-            <p className="mt-1 text-sm text-stone-600">
+            <p className="mt-1 text-sm text-stone-400">
               Detects your chip (Apple Silicon or Intel), downloads the right DMG to a
-              temp folder, installs to <code className="rounded bg-stone-100 px-1 text-xs">/Applications</code>,
+              temp folder, installs to <code className="rounded bg-stone-900 px-1 text-xs text-stone-200">/Applications</code>,
               clears quarantine, and opens the app.
             </p>
-            <ol className="mt-4 list-inside list-decimal space-y-1.5 text-sm text-stone-600">
+            <ol className="mt-4 list-inside list-decimal space-y-1.5 text-sm text-stone-400">
               <li>Open Terminal (Spotlight → type "Terminal").</li>
               <li>Paste the command below and press Enter.</li>
               <li>KathaGPT opens automatically when done.</li>
@@ -85,27 +85,27 @@ export function InstallSetup() {
           {/* ── macOS: Option B — already downloaded ───────────────────── */}
           <div id="install-macos-intel" className="surface-card scroll-mt-24 p-6">
             <div className="flex items-center gap-2">
-              <span className="rounded-full bg-stone-200 px-2.5 py-0.5 text-xs font-semibold text-stone-700">
+              <span className="rounded-full bg-stone-800 px-2.5 py-0.5 text-xs font-semibold text-stone-300">
                 Option B
               </span>
-              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
+              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-400">
                 macOS · Already downloaded the DMG?
               </span>
             </div>
-            <h3 className="mt-2 text-lg font-semibold text-stone-900">
+            <h3 className="mt-2 text-lg font-semibold text-white">
               Smart install from your download
             </h3>
-            <p className="mt-1 text-sm text-stone-600">
+            <p className="mt-1 text-sm text-stone-400">
               Works even if the file was saved to Downloads, Desktop, or
               anywhere else — and handles renamed copies like{" "}
-              <code className="rounded bg-stone-100 px-1 text-xs">KathaGPT_…(2).dmg</code>.
+              <code className="rounded bg-stone-900 px-1 text-xs text-stone-200">KathaGPT_…(2).dmg</code>.
             </p>
-            <ul className="mt-4 list-inside list-disc space-y-1.5 text-sm text-stone-600">
+            <ul className="mt-4 list-inside list-disc space-y-1.5 text-sm text-stone-400">
               <li>
                 Supports{" "}
-                <strong className="text-stone-800">{INSTALL_FILES["mac-arm"]}</strong>{" "}
+                <strong className="text-stone-200">{INSTALL_FILES["mac-arm"]}</strong>{" "}
                 (Apple Silicon) and{" "}
-                <strong className="text-stone-800">{INSTALL_FILES["mac-intel"]}</strong>{" "}
+                <strong className="text-stone-200">{INSTALL_FILES["mac-intel"]}</strong>{" "}
                 (Intel) — picks the one it finds.
               </li>
               <li>Open Terminal, paste the command, press Enter.</li>
@@ -115,18 +115,18 @@ export function InstallSetup() {
 
           {/* ── macOS quick fix ────────────────────────────────────────── */}
           <div id="install-macos-fix" className="surface-card p-6">
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-stone-400">
               macOS · already in Applications?
             </p>
-            <h3 className="mt-2 text-lg font-semibold text-stone-900">
+            <h3 className="mt-2 text-lg font-semibold text-white">
               Quick fix if the app won&apos;t open
             </h3>
-            <p className="mt-2 text-sm text-stone-600">
+            <p className="mt-2 text-sm text-stone-400">
               Or right-click{" "}
-              <strong className="text-stone-800">KathaGPT.app</strong>{" "}
+              <strong className="text-stone-200">KathaGPT.app</strong>{" "}
               in Applications →{" "}
-              <strong className="text-stone-800">Open</strong> →{" "}
-              <strong className="text-stone-800">Open</strong> again.
+              <strong className="text-stone-200">Open</strong> →{" "}
+              <strong className="text-stone-200">Open</strong> again.
             </p>
             <CopyBlock command={MAC_QUICK_FIX} copyKey="quick" copied={copied} onCopy={copy} />
           </div>
@@ -134,22 +134,22 @@ export function InstallSetup() {
           {/* ── Linux ──────────────────────────────────────────────────── */}
           <div id="install-linux" className="surface-card scroll-mt-24 p-6">
             <div className="flex items-center gap-2">
-              <span className="rounded-full bg-stone-900 px-2.5 py-0.5 text-xs font-semibold text-white">
+              <span className="rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold text-stone-950">
                 Option A
               </span>
-              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
+              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-400">
                 Linux · Recommended
               </span>
             </div>
-            <h3 className="mt-2 text-lg font-semibold text-stone-900">
+            <h3 className="mt-2 text-lg font-semibold text-white">
               One command — no download needed
             </h3>
-            <p className="mt-1 text-sm text-stone-600">
+            <p className="mt-1 text-sm text-stone-400">
               Downloads the AppImage, installs it to{" "}
-              <code className="rounded bg-stone-100 px-1 text-xs">~/.local/bin</code>,
+              <code className="rounded bg-stone-900 px-1 text-xs text-stone-200">~/.local/bin</code>,
               creates a desktop entry, and launches KathaGPT.
             </p>
-            <ol className="mt-4 list-inside list-decimal space-y-1.5 text-sm text-stone-600">
+            <ol className="mt-4 list-inside list-decimal space-y-1.5 text-sm text-stone-400">
               <li>Open a terminal.</li>
               <li>Paste the command below and press Enter.</li>
               <li>KathaGPT launches automatically when done.</li>
@@ -159,27 +159,27 @@ export function InstallSetup() {
 
           <div className="surface-card scroll-mt-24 p-6">
             <div className="flex items-center gap-2">
-              <span className="rounded-full bg-stone-200 px-2.5 py-0.5 text-xs font-semibold text-stone-700">
+              <span className="rounded-full bg-stone-800 px-2.5 py-0.5 text-xs font-semibold text-stone-300">
                 Option B
               </span>
-              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
+              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-400">
                 Linux · Already downloaded the AppImage?
               </span>
             </div>
-            <h3 className="mt-2 text-lg font-semibold text-stone-900">
+            <h3 className="mt-2 text-lg font-semibold text-white">
               Smart install from your download
             </h3>
-            <p className="mt-1 text-sm text-stone-600">
+            <p className="mt-1 text-sm text-stone-400">
               Searches ~/Downloads, ~/Desktop, and ~ for any{" "}
-              <code className="rounded bg-stone-100 px-1 text-xs">KathaGPT*.AppImage</code> —
+              <code className="rounded bg-stone-900 px-1 text-xs text-stone-200">KathaGPT*.AppImage</code> —
               handles duplicates like{" "}
-              <code className="rounded bg-stone-100 px-1 text-xs">(1).AppImage</code> and files
+              <code className="rounded bg-stone-900 px-1 text-xs text-stone-200">(1).AppImage</code> and files
               saved to non-standard locations.
             </p>
-            <ul className="mt-4 list-inside list-disc space-y-1.5 text-sm text-stone-600">
+            <ul className="mt-4 list-inside list-disc space-y-1.5 text-sm text-stone-400">
               <li>
                 Looking for{" "}
-                <strong className="text-stone-800">{INSTALL_FILES.linux}</strong>.
+                <strong className="text-stone-200">{INSTALL_FILES.linux}</strong>.
               </li>
               <li>Open a terminal, paste the command, press Enter.</li>
             </ul>
@@ -189,22 +189,22 @@ export function InstallSetup() {
           {/* ── Windows ────────────────────────────────────────────────── */}
           <div id="install-windows" className="surface-card scroll-mt-24 p-6">
             <div className="flex items-center gap-2">
-              <span className="rounded-full bg-stone-900 px-2.5 py-0.5 text-xs font-semibold text-white">
+              <span className="rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold text-stone-950">
                 Option A
               </span>
-              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
+              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-400">
                 Windows · Recommended
               </span>
             </div>
-            <h3 className="mt-2 text-lg font-semibold text-stone-900">
+            <h3 className="mt-2 text-lg font-semibold text-white">
               One command — no browser download needed
             </h3>
-            <p className="mt-1 text-sm text-stone-600">
+            <p className="mt-1 text-sm text-stone-400">
               Downloads{" "}
-              <code className="rounded bg-stone-100 px-1 text-xs">{INSTALL_FILES.windows}</code>{" "}
+              <code className="rounded bg-stone-900 px-1 text-xs text-stone-200">{INSTALL_FILES.windows}</code>{" "}
               and launches the NSIS installer.
             </p>
-            <ol className="mt-4 list-inside list-decimal space-y-1.5 text-sm text-stone-600">
+            <ol className="mt-4 list-inside list-decimal space-y-1.5 text-sm text-stone-400">
               <li>Open PowerShell (Start → type &quot;PowerShell&quot;).</li>
               <li>Paste the command below and press Enter.</li>
               <li>Follow the setup wizard, then open KathaGPT from the Start menu.</li>
@@ -214,21 +214,21 @@ export function InstallSetup() {
 
           <div className="surface-card scroll-mt-24 p-6">
             <div className="flex items-center gap-2">
-              <span className="rounded-full bg-stone-200 px-2.5 py-0.5 text-xs font-semibold text-stone-700">
+              <span className="rounded-full bg-stone-800 px-2.5 py-0.5 text-xs font-semibold text-stone-300">
                 Option B
               </span>
-              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
+              <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-400">
                 Windows · Already downloaded the installer?
               </span>
             </div>
-            <h3 className="mt-2 text-lg font-semibold text-stone-900">
+            <h3 className="mt-2 text-lg font-semibold text-white">
               Smart install from your download
             </h3>
-            <p className="mt-1 text-sm text-stone-600">
+            <p className="mt-1 text-sm text-stone-400">
               Finds{" "}
-              <code className="rounded bg-stone-100 px-1 text-xs">KathaGPT*.exe</code>{" "}
+              <code className="rounded bg-stone-900 px-1 text-xs text-stone-200">KathaGPT*.exe</code>{" "}
               or{" "}
-              <code className="rounded bg-stone-100 px-1 text-xs">*.msi</code>{" "}
+              <code className="rounded bg-stone-900 px-1 text-xs text-stone-200">*.msi</code>{" "}
               in Downloads or Desktop — handles renamed copies.
             </p>
             <CopyBlock command={WINDOWS_SMART_INSTALL} copyKey="windows-smart" copied={copied} onCopy={copy} />
@@ -236,25 +236,25 @@ export function InstallSetup() {
 
           {/* ── first launch ───────────────────────────────────────────── */}
           <div className="surface-card p-6">
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-stone-400">
               Final step · First launch
             </p>
-            <h3 className="mt-2 text-lg font-semibold text-stone-900">
+            <h3 className="mt-2 text-lg font-semibold text-white">
               Start chatting
             </h3>
-            <ol className="mt-4 list-inside list-decimal space-y-2 text-sm text-stone-600">
+            <ol className="mt-4 list-inside list-decimal space-y-2 text-sm text-stone-400">
               <li>
                 Open KathaGPT from Applications (macOS), the Start menu (Windows),
                 or your app launcher (Linux).
               </li>
               <li>
-                <strong className="text-stone-800">Local models:</strong> use{" "}
-                <strong className="text-stone-800">Add Local Model</strong> in the
+                <strong className="text-stone-200">Local models:</strong> use{" "}
+                <strong className="text-stone-200">Add Local Model</strong> in the
                 user menu — no API key required.
               </li>
               <li>
-                <strong className="text-stone-800">Cloud models:</strong> go to{" "}
-                <strong className="text-stone-800">Settings → API Keys</strong>{" "}
+                <strong className="text-stone-200">Cloud models:</strong> go to{" "}
+                <strong className="text-stone-200">Settings → API Keys</strong>{" "}
                 and add OpenRouter (recommended), OpenAI, Anthropic, Google, or
                 Perplexity.
               </li>
@@ -267,7 +267,7 @@ export function InstallSetup() {
           <a
             href={assetUrl("downloads/install-macos.sh")}
             download="install-macos.sh"
-            className="font-medium text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-500"
+            className="font-medium text-stone-200 underline decoration-stone-700 underline-offset-2 hover:decoration-stone-500"
           >
             install-macos.sh
           </a>{" "}
@@ -275,7 +275,7 @@ export function InstallSetup() {
           <a
             href={assetUrl("downloads/install-linux.sh")}
             download="install-linux.sh"
-            className="font-medium text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-500"
+            className="font-medium text-stone-200 underline decoration-stone-700 underline-offset-2 hover:decoration-stone-500"
           >
             install-linux.sh
           </a>{" "}
@@ -283,7 +283,7 @@ export function InstallSetup() {
           <a
             href={assetUrl("downloads/install-windows.ps1")}
             download="install-windows.ps1"
-            className="font-medium text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-500"
+            className="font-medium text-stone-200 underline decoration-stone-700 underline-offset-2 hover:decoration-stone-500"
           >
             install-windows.ps1
           </a>
@@ -306,13 +306,13 @@ function CopyBlock({
 }) {
   return (
     <div className="relative mt-4">
-      <pre className="overflow-x-auto rounded-xl border border-stone-200 bg-stone-50 p-4 text-xs leading-relaxed text-stone-800">
+      <pre className="overflow-x-auto rounded-xl border border-stone-800 bg-stone-900/40 p-4 text-xs leading-relaxed text-stone-300">
         {command}
       </pre>
       <button
         type="button"
         onClick={() => void onCopy(command, copyKey)}
-        className="absolute right-3 top-3 rounded-lg border border-stone-200 bg-white px-3 py-1 text-xs font-medium text-stone-700 hover:bg-stone-50"
+        className="absolute right-3 top-3 rounded-lg border border-stone-800 bg-stone-900 px-3 py-1 text-xs font-medium text-stone-300 hover:bg-stone-800"
       >
         {copied === copyKey ? "Copied!" : "Copy"}
       </button>

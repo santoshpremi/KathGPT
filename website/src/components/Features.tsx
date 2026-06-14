@@ -57,7 +57,7 @@ const features = [
 
 export function Features() {
   return (
-    <section id="features" className="border-b border-stone-200 bg-white py-24">
+    <section id="features" className="border-b border-stone-900 bg-stone-950 py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="section-label">Why KathaGPT</p>
@@ -75,13 +75,13 @@ export function Features() {
           {features.map((feature) => (
             <article
               key={feature.title}
-              className="surface-card p-6 transition hover:border-stone-300"
+              className="surface-card p-6 transition hover:border-stone-800"
             >
-              <div className="mb-4 inline-flex rounded-xl border border-stone-200 bg-stone-50 p-3 text-stone-700">
+              <div className="mb-4 inline-flex rounded-xl border border-stone-800 bg-stone-900 p-3 text-stone-300">
                 <feature.icon className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-semibold text-stone-900">{feature.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-stone-600">
+              <h3 className="text-lg font-semibold text-white">{feature.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-stone-400">
                 {feature.description}
               </p>
             </article>

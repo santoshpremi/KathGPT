@@ -20,7 +20,7 @@ export function ProductShowcase() {
     PRODUCT_FEATURES.find((f) => f.id === active) ?? PRODUCT_FEATURES[0];
 
   return (
-    <section id="product" className="border-b border-stone-200 bg-white py-24 md:py-32">
+    <section id="product" className="border-b border-stone-900 bg-stone-950 py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-3xl text-center">
           <p className="section-label">Product</p>
@@ -46,7 +46,7 @@ export function ProductShowcase() {
         </div>
 
         <nav
-          className="mx-auto mt-10 flex w-full max-w-5xl flex-nowrap items-center justify-center gap-1 overflow-x-auto rounded-full border border-stone-200 bg-stone-50 p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="mx-auto mt-10 flex w-full max-w-5xl flex-nowrap items-center justify-center gap-1 overflow-x-auto rounded-full border border-stone-900 bg-stone-900/20 p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           aria-label="Product features"
         >
           {PRODUCT_FEATURES.map((item) => {
@@ -60,8 +60,8 @@ export function ProductShowcase() {
                 onClick={() => setActive(item.id)}
                 className={`inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-xs font-medium transition sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm ${
                   isActive
-                    ? "bg-white text-stone-900 shadow-soft"
-                    : "text-stone-500 hover:text-stone-800"
+                    ? "bg-stone-900 text-white shadow-soft"
+                    : "text-stone-400 hover:text-white"
                 }`}
                 aria-pressed={isActive}
               >
@@ -81,14 +81,14 @@ function FeaturePanel({ feature }: { feature: ProductFeature }) {
     <div className="mt-10 lg:mt-0">
       <div className="surface-card p-6 lg:sticky lg:top-24">
         <p className="section-label">{feature.label}</p>
-        <h3 className="mt-2 text-xl font-semibold text-stone-900">{feature.title}</h3>
-        <p className="mt-3 text-sm leading-relaxed text-stone-600">
+        <h3 className="mt-2 text-xl font-semibold text-white">{feature.title}</h3>
+        <p className="mt-3 text-sm leading-relaxed text-stone-400">
           {feature.description}
         </p>
         <ul className="mt-5 space-y-3">
           {feature.bullets.map((bullet) => (
-            <li key={bullet} className="flex gap-3 text-sm text-stone-700">
-              <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-stone-400" />
+            <li key={bullet} className="flex gap-3 text-sm text-stone-300">
+              <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-stone-600" />
               <span>{bullet}</span>
             </li>
           ))}

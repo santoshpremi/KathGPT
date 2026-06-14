@@ -4,7 +4,7 @@ import { SITE } from "../lib/site";
 
 export function DownloadSection() {
   return (
-    <section id="download" className="border-b border-stone-200 bg-stone-50 py-20">
+    <section id="download" className="border-b border-stone-900 bg-stone-900/10 py-20">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="section-label">Get started</p>
@@ -15,7 +15,7 @@ export function DownloadSection() {
             be taken to{" "}
             <a
               href="#install-setup"
-              className="font-medium text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-500"
+              className="font-medium text-stone-200 underline decoration-stone-700 underline-offset-2 hover:decoration-stone-500"
             >
               Install Setup
             </a>{" "}
@@ -32,26 +32,26 @@ export function DownloadSection() {
         </div>
 
         <div className="surface-card mx-auto mt-12 max-w-2xl p-6">
-          <h3 className="font-semibold text-stone-900">System requirements</h3>
-          <ul className="mt-3 space-y-2 text-sm text-stone-600">
+          <h3 className="font-semibold text-white">System requirements</h3>
+          <ul className="mt-3 space-y-2 text-sm text-stone-400">
             <li>
-              <strong className="text-stone-800">macOS (Apple Silicon):</strong>{" "}
+              <strong className="text-stone-200">macOS (Apple Silicon):</strong>{" "}
               11+ — available above
             </li>
             <li>
-              <strong className="text-stone-800">macOS (Intel):</strong> 11+ —
+              <strong className="text-stone-200">macOS (Intel):</strong> 11+ —
               available above
             </li>
             <li>
-              <strong className="text-stone-800">Linux:</strong> Ubuntu 20.04+ —
+              <strong className="text-stone-200">Linux:</strong> Ubuntu 20.04+ —
               AppImage available above
             </li>
             <li>
-              <strong className="text-stone-800">Windows:</strong> 10+ (64-bit) —
+              <strong className="text-stone-200">Windows:</strong> 10+ (64-bit) —
               NSIS installer available above
             </li>
             <li>
-              <strong className="text-stone-800">API key:</strong> OpenRouter
+              <strong className="text-stone-200">API key:</strong> OpenRouter
               recommended
             </li>
           </ul>
@@ -61,7 +61,7 @@ export function DownloadSection() {
           Open source · {SITE.license}.{" "}
           <a
             href={`https://github.com/${SITE.githubRepo}/blob/main/README.md`}
-            className="text-stone-800 underline decoration-stone-300 underline-offset-2 hover:decoration-stone-500"
+            className="text-stone-200 underline decoration-stone-700 underline-offset-2 hover:decoration-stone-500"
           >
             Build other platforms from source
           </a>

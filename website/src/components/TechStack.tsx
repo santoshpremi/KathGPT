@@ -31,7 +31,7 @@ const stack = [
 
 export function TechStack() {
   return (
-    <section id="tech" className="border-b border-stone-200 bg-stone-50 py-24">
+    <section id="tech" className="border-b border-stone-900 bg-stone-900/10 py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-3xl text-center">
           <p className="section-label">Powered by Rust</p>
@@ -48,8 +48,8 @@ export function TechStack() {
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {rustBenefits.map((item) => (
             <article key={item.title} className="surface-card p-5">
-              <h3 className="font-semibold text-stone-900">{item.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-stone-600">
+              <h3 className="font-semibold text-white">{item.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-stone-400">
                 {item.description}
               </p>
             </article>
@@ -60,18 +60,18 @@ export function TechStack() {
           {stack.map((item) => (
             <span
               key={item.label}
-              className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm"
+              className="inline-flex items-center gap-2 rounded-full border border-stone-900 bg-stone-900/20 px-4 py-2 text-sm"
             >
-              <span className="font-medium text-stone-800">{item.label}</span>
-              <span className="text-stone-300">·</span>
-              <span className="text-stone-500">{item.value}</span>
+              <span className="font-medium text-stone-200">{item.label}</span>
+              <span className="text-stone-700">·</span>
+              <span className="text-stone-400">{item.value}</span>
             </span>
           ))}
         </div>
 
         <div className="surface-card mx-auto mt-12 max-w-2xl p-6 text-center">
-          <p className="text-sm text-stone-600">
-            <span className="font-semibold text-stone-900">vs. Electron-style apps:</span>{" "}
+          <p className="text-sm text-stone-400">
+            <span className="font-semibold text-white">vs. Electron-style apps:</span>{" "}
             Tauri + Rust means a smaller download, lower RAM use, and a backend that
             starts instantly — while still shipping a full React interface.
           </p>

@@ -35,7 +35,7 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="border-b border-stone-200 bg-white py-24">
+    <section id="faq" className="border-b border-stone-900 bg-stone-950 py-24">
       <div className="mx-auto max-w-3xl px-6">
         <div className="text-center">
           <p className="section-label">FAQ</p>
@@ -51,8 +51,8 @@ export function FAQ() {
                 key={item.q}
                 className={`rounded-xl border transition ${
                   isOpen
-                    ? "border-stone-300 bg-stone-50"
-                    : "border-stone-200 bg-white hover:border-stone-300"
+                    ? "border-stone-800 bg-stone-900/40"
+                    : "border-stone-900 bg-stone-950 hover:border-stone-800"
                 }`}
               >
                 <dt>
@@ -62,14 +62,14 @@ export function FAQ() {
                     onClick={() => setOpenIndex(isOpen ? null : index)}
                     aria-expanded={isOpen}
                   >
-                    <span className="font-medium text-stone-900">{item.q}</span>
+                    <span className="font-medium text-white">{item.q}</span>
                     <ChevronIcon
                       className={`h-5 w-5 shrink-0 text-stone-400 transition ${isOpen ? "rotate-180" : ""}`}
                     />
                   </button>
                 </dt>
                 {isOpen && (
-                  <dd className="border-t border-stone-200 px-5 pb-4 pt-1 text-sm leading-relaxed text-stone-600">
+                  <dd className="border-t border-stone-900 px-5 pb-4 pt-1 text-sm leading-relaxed text-stone-400">
                     {item.a}
                   </dd>
                 )}

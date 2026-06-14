@@ -40,10 +40,10 @@ export function PlatformDownloads() {
             href={href!}
             download
             onClick={() => navigateToInstallSetup(p.id)}
-            className="flex items-center justify-between rounded-xl border border-stone-200 bg-white px-5 py-4 text-sm text-stone-900 transition hover:border-stone-300"
+            className="flex items-center justify-between rounded-xl border border-stone-800 bg-stone-900/40 px-5 py-4 text-sm text-stone-100 transition hover:border-stone-700 hover:bg-stone-900/60"
           >
             <span className="font-medium">{p.label}</span>
-            <span className="rounded-full bg-stone-900 px-3 py-1 text-xs font-medium text-white">
+            <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-stone-950">
               Download
               {releaseAsset ? ` · ${formatBytes(releaseAsset.size)}` : ""}
             </span>
@@ -51,10 +51,10 @@ export function PlatformDownloads() {
         ) : (
           <div
             key={p.id}
-            className="flex items-center justify-between rounded-xl border border-dashed border-stone-300 bg-stone-50 px-5 py-4 text-sm"
+            className="flex items-center justify-between rounded-xl border border-dashed border-stone-800 bg-stone-950 px-5 py-4 text-sm"
           >
-            <span className="font-medium text-stone-700">{p.label}</span>
-            <span className="rounded-full border border-stone-200 bg-white px-3 py-1 text-xs font-medium text-stone-500">
+            <span className="font-medium text-stone-400">{p.label}</span>
+            <span className="rounded-full border border-stone-800 bg-stone-900 px-3 py-1 text-xs font-medium text-stone-500">
               Coming soon
             </span>
           </div>
