@@ -51,7 +51,7 @@ export function PlatformDownloads() {
         ) : (
           <div
             key={p.id}
-            className="flex items-center justify-between rounded-xl border border-dashed border-stone-800 bg-stone-950 px-5 py-4 text-sm"
+            className="flex items-center justify-between rounded-xl border border-dashed border-stone-800 bg-black px-5 py-4 text-sm"
           >
             <span className="font-medium text-stone-400">{p.label}</span>
             <span className="rounded-full border border-stone-800 bg-stone-900 px-3 py-1 text-xs font-medium text-stone-500">

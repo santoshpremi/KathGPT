@@ -12,7 +12,7 @@ import { TrustBar } from "./components/TrustBar";
 
 export default function App() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-black">
       <Header />
       <main>
         <Hero />

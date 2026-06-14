@@ -4,7 +4,7 @@ import { SITE } from "../lib/site";
 
 export function Hero() {
   return (
-    <section className="border-b border-stone-900 bg-stone-950 pt-28 pb-20 md:pt-36 md:pb-28">
+    <section className="border-b border-stone-900 bg-black pt-28 pb-20 md:pt-36 md:pb-28">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-3xl text-center">
           <p className="section-label">Open source desktop app</p>

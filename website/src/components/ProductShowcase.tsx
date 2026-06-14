@@ -20,7 +20,7 @@ export function ProductShowcase() {
     PRODUCT_FEATURES.find((f) => f.id === active) ?? PRODUCT_FEATURES[0];
 
   return (
-    <section id="product" className="border-b border-stone-900 bg-stone-950 py-24 md:py-32">
+    <section id="product" className="border-b border-stone-900 bg-black py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-3xl text-center">
           <p className="section-label">Product</p>

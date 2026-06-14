@@ -15,7 +15,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-stone-900/80 bg-stone-950/80 backdrop-blur-md">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-stone-900/80 bg-black/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         <Logo />
 
@@ -54,7 +54,7 @@ export function Header() {
       </div>
 
       {open && (
-        <nav className="border-t border-stone-900 bg-stone-950 px-6 py-4 md:hidden">
+        <nav className="border-t border-stone-900 bg-black px-6 py-4 md:hidden">
           <ul className="space-y-1">
             {links.map((link) => (
               <li key={link.href}>

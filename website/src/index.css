@@ -5,10 +5,12 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    color-scheme: dark;
+    background-color: #000;
   }
 
   body {
-    @apply bg-stone-950 text-stone-100 antialiased;
+    @apply bg-black text-stone-100 antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 

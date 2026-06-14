@@ -13,7 +13,7 @@ export function AppWindow({
 }: AppWindowProps) {
   return (
     <div
-      className={`overflow-hidden rounded-2xl border border-stone-800 bg-stone-950 ${className}`}
+      className={`overflow-hidden rounded-2xl border border-stone-800 bg-black ${className}`}
     >
       <div className="flex items-center gap-2 border-b border-stone-800 bg-stone-900/50 px-4 py-3">
         <span className="h-2.5 w-2.5 rounded-full bg-stone-700" />
@@ -21,7 +21,7 @@ export function AppWindow({
         <span className="h-2.5 w-2.5 rounded-full bg-stone-700" />
         <span className="ml-3 text-xs font-medium text-stone-400">KathaGPT</span>
       </div>
-      <div className="relative bg-stone-950">
+      <div className="relative bg-black">
         <img
           src={image}
           alt={alt}

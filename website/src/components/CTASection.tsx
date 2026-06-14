@@ -3,7 +3,7 @@ import { SITE } from "../lib/site";
 
 export function CTASection() {
   return (
-    <section className="bg-stone-950 py-24">
+    <section className="bg-black py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="rounded-3xl border border-stone-800 bg-stone-900/30 px-8 py-14 text-center md:px-16">
           <h2 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
