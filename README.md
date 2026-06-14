@@ -2,27 +2,14 @@
 
 **Fast, private AI chat on your machine — powered by Rust.** Run local AI models with no API key, or bring your own for cloud providers. Every conversation stays on your device.
 
+![KathaGPT demo](docs/demo.gif)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/santoshpremi/KathaGPT?style=social)](https://github.com/santoshpremi/KathaGPT)
-[![GitHub Forks](https://img.shields.io/github/forks/santoshpremi/KathaGPT?style=social)](https://github.com/santoshpremi/KathaGPT/fork)
-[![GitHub Release](https://img.shields.io/github/v/release/santoshpremi/KathaGPT)](https://github.com/santoshpremi/KathaGPT/releases/latest)
-[![GitHub Downloads](https://img.shields.io/github/downloads/santoshpremi/KathaGPT/total)](https://github.com/santoshpremi/KathaGPT/releases)
-[![CI](https://github.com/santoshpremi/KathaGPT/actions/workflows/rust.yml/badge.svg)](https://github.com/santoshpremi/KathaGPT/actions)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-
-> **[Try it now →](https://santoshpremi.github.io/KathaGPT/)** · [Download latest release](https://github.com/santoshpremi/KathaGPT/releases/latest) · [View demo](#demo)
-
----
-
-<a id="demo"></a>
-
-![KathaGPT demo — private AI chat with local models, workflows, and tools](docs/demo.gif)
-
----
+[![GitHub](https://img.shields.io/github/stars/santoshpremi/KathaGPT?style=social)](https://github.com/santoshpremi/KathaGPT)
 
 | | |
 |---|---|
-| **Version** | 0.1.1 |
+| **Version** | 0.1.0 |
 | **Stack** | React · **Rust (Axum)** · Tauri v2 · SQLite · llama.cpp |
 | **Platforms** | macOS · Windows · Linux |
 | **Repo** | [github.com/santoshpremi/KathaGPT](https://github.com/santoshpremi/KathaGPT) |
@@ -103,18 +90,6 @@ KathaGPT's backend is **100% Rust** — the old Node.js server is gone. One nati
 - **Protected keys** — API keys stored locally, masked in UI. See [SECURITY.md](SECURITY.md).
 - **Native desktop** — One-click `.dmg` / `.msi` / `.AppImage`; no Electron overhead.
 - **Open source** — MIT licensed; inspect, fork, and self-host.
-
----
-
-## Want to Contribute?
-
-KathaGPT welcomes contributors of all skill levels — whether you write Rust, TypeScript, or just want to improve docs.
-
-- Browse [`good first issue`](https://github.com/santoshpremi/KathaGPT/issues?q=is%3Aopen+label%3A%22good+first+issue%22) for beginner-friendly tasks
-- Read the full [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions
-- [Open a Discussion](https://github.com/santoshpremi/KathaGPT/discussions) to propose ideas
-
-**If KathaGPT is useful to you, please give it a star — it helps others discover the project.**
 
 ### What's included
 
@@ -353,9 +328,19 @@ Set `VITE_GITHUB_REPO=owner/repo` in `website/.env` (see `website/.env.example`)
 ### Release checklist
 
 1. Run `pnpm test:e2e` on `main`.
-2. Tag: `git tag v0.1.0 && git push origin v0.1.0` — CI builds macOS (ARM + Intel), Windows, and Linux installers.
-3. Confirm [GitHub Releases](https://github.com/santoshpremi/KathaGPT/releases) has `.dmg` / `.msi` / `.AppImage` assets.
-4. Verify the Pages site shows working download buttons.
+2. Set GitHub secret `TAURI_SIGNING_PRIVATE_KEY` (contents of `src-tauri/.tauri-updater.key`) if not already configured.
+3. Tag: `git tag v0.1.1 && git push origin v0.1.1` — CI builds installers + signed updater artifacts + `latest.json`.
+4. Confirm [GitHub Releases](https://github.com/santoshpremi/KathaGPT/releases) has `.dmg` / `.msi` / `.AppImage` and `latest.json`.
+5. Verify the Pages site shows working download buttons.
+6. Installed desktop apps check for updates automatically ~8s after launch (Settings → no action needed).
+
+---
+
+## Auto-updater (desktop)
+
+The Tauri app checks [GitHub Releases](https://github.com/santoshpremi/KathaGPT/releases/latest/download/latest.json) for signed updates and prompts **Update & restart**.
+
+**Maintainers:** generate keys once (`CI=true pnpm tauri signer generate -w src-tauri/.tauri-updater.key --ci`), keep the private key secret, and add it as `TAURI_SIGNING_PRIVATE_KEY` in GitHub Actions secrets. The public key is embedded in `src-tauri/tauri.conf.json`.
 
 ---
 
@@ -363,9 +348,9 @@ Set `VITE_GITHUB_REPO=owner/repo` in `website/.env` (see `website/.env.example`)
 
 | Area | Next steps |
 |------|-----------|
-| **Local LLM** | Hardware detection (VRAM/RAM), auto-recommend quant level, delete model from UI |
-| **Context** | Token counter, smart truncation, remaining-tokens indicator |
-| **Desktop** | Global hotkey (`⌘⇧Space`), auto-updater, system tray quick-compose |
+| **Local LLM** | RAM detection + recommended picker (done); quant auto-pick (done), delete model UI (done) |
+| **Context** | Token counter, smart truncation, remaining-tokens indicator (done) |
+| **Desktop** | Global hotkey + quick-compose (done); auto-updater (done) |
 | **Memory & RAG** | `sqlite-vec` vector search, document chat (PDF → chunks → embed) |
 | **Agents** | Tool calling, multi-step ReAct loops, workflow marketplace |
 
@@ -373,11 +358,7 @@ Set `VITE_GITHUB_REPO=owner/repo` in `website/.env` (see `website/.env.example`)
 
 ## Contributing
 
-Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for dev setup, project structure, and how to submit a PR. See also [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) and [SECURITY.md](SECURITY.md).
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=santoshpremi/KathaGPT&type=Date)](https://star-history.com/#santoshpremi/KathaGPT&Date)
+Issues and pull requests are welcome. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) and [SECURITY.md](SECURITY.md).
 
 ## License
 

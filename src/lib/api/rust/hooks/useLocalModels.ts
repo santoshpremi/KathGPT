@@ -4,6 +4,7 @@ import {
   deleteLocalModel,
   DownloadProgress,
   getInstalledLocalModels,
+  getLocalHardwareProfile,
   getLocalModelsStatus,
   searchLocalModelCatalog,
   startModelDownload,
@@ -11,7 +12,16 @@ import {
 import { getRustApiBase } from "../init";
 
 const STATUS_KEY = ["local-models", "status"] as const;
+const HARDWARE_KEY = ["local-models", "hardware"] as const;
 const INSTALLED_KEY = ["local-models", "installed"] as const;
+
+export function useLocalHardware() {
+  return useQuery({
+    queryKey: HARDWARE_KEY,
+    queryFn: getLocalHardwareProfile,
+    staleTime: 60_000,
+  });
+}
 
 export function useLocalModelsStatus() {
   return useQuery({

@@ -2,12 +2,15 @@ mod api;
 mod crypto;
 mod document_text;
 mod file_preview;
+mod quick_compose;
 mod translate_pdf;
 pub mod config;
 pub mod db;
+pub mod hardware;
 pub mod llm;
 pub mod models;
 pub mod server;
+pub mod tokens;
 
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicU16, Ordering};
@@ -33,11 +36,30 @@ pub fn run() {
 
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![get_api_port, save_translated_file])
+        .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
+        .invoke_handler(tauri::generate_handler![
+            get_api_port,
+            save_translated_file,
+            quick_compose::hide_quick_compose,
+            quick_compose::open_chat_in_main,
+            quick_compose::sync_quick_compose_enabled,
+        ])
         .setup(|app| {
+            let quick_compose_item = MenuItem::with_id(
+                app,
+                "quick_compose",
+                "Quick Compose",
+                true,
+                None::<&str>,
+            )?;
             let open_item = MenuItem::with_id(app, "open", "Open KathaGPT", true, None::<&str>)?;
             let quit_item = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-            let tray_menu = Menu::with_items(app, &[&open_item, &quit_item])?;
+            let tray_menu = Menu::with_items(
+                app,
+                &[&quick_compose_item, &open_item, &quit_item],
+            )?;
 
             let icon = app
                 .default_window_icon()
@@ -49,7 +71,8 @@ pub fn run() {
                 .menu(&tray_menu)
                 .tooltip("KathaGPT")
                 .on_menu_event(|app, event| match event.id.as_ref() {
-                    "open" => show_main_window(app),
+                    "quick_compose" => quick_compose::show_quick_compose(app),
+                    "open" => quick_compose::show_main_window(app),
                     "quit" => app.exit(0),
                     _ => {}
                 })
@@ -60,7 +83,7 @@ pub fn run() {
                         ..
                     } = event
                     {
-                        show_main_window(tray.app_handle());
+                        quick_compose::show_main_window(tray.app_handle());
                     }
                 })
                 .build(app)?;
@@ -70,7 +93,7 @@ pub fn run() {
                 if let Err(err) = start_backend(&handle).await {
                     tracing::error!("Failed to start local backend: {err}");
                 }
-                show_main_window(&handle);
+                quick_compose::show_main_window(&handle);
             });
 
             Ok(())
@@ -149,12 +172,4 @@ fn save_translated_file(filename: String, data_base64: String) -> Result<String,
     }
 
     Ok(path.to_string_lossy().into_owned())
-}
-
-fn show_main_window(app: &tauri::AppHandle) {
-    if let Some(window) = app.get_webview_window("main") {
-        let _ = window.show();
-        let _ = window.unminimize();
-        let _ = window.set_focus();
-    }
 }

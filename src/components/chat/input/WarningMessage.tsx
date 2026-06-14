@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { LLM_META, type LlmName } from "@backend/ai/llmMeta";
 import { calculateMessageCreditUsage } from "@backend/util/credits/calculateMessageCreditUsage";
+import { estimateTokens } from "@shared/util/estimateTokens";
 import { useChat, useEnabledModels } from "../../../lib/api/rust";
 import type { AttachedDocument } from "./ChatInput";
 import { useParams } from "../../../router";
@@ -67,8 +68,8 @@ export function WarningMessage({
 
   const { data: enabledModels } = useEnabledModels();
 
-  // Rough estimation
-  const inputTokens = input.length / 4;
+  // Rough estimation (~4 chars per token)
+  const inputTokens = estimateTokens(input);
   const documentTokens = attachedDocuments.reduce(
     (acc, doc) => acc + doc.tokens,
     0,

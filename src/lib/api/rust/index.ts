@@ -16,6 +16,7 @@ export { useAvailableModels, useEnabledModels } from "./hooks/useModelConfig";
 export { useProviderModels } from "./hooks/useProviderModels";
 export {
   useLocalModelsStatus,
+  useLocalHardware,
   useInstalledLocalModels,
   useLocalModelCatalog,
   useStartModelDownload,
@@ -27,6 +28,8 @@ export type {
   SidecarStatus,
   InstalledLocalModel,
   CatalogLocalModel,
+  LocalHardwareProfile,
+  GpuHint,
   DownloadProgress,
   DownloadPhase,
 } from "./localModels";

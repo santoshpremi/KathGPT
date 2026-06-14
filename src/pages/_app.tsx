@@ -11,6 +11,8 @@ import { useAuthStore } from "../lib/context/authStore";
 import { handleGenericError } from "../lib/errorHandling";
 import { useTranslation } from "../lib/i18n";
 import { ToolSessionLifecycle } from "../components/tools/ToolSessionLifecycle";
+import { AppUpdateChecker } from "../components/util/AppUpdateChecker";
+import { QuickComposeBridge } from "../components/util/QuickComposeBridge";
 
 export default function RootLayout() {
   const { t } = useTranslation();
@@ -62,6 +64,8 @@ function RootContent() {
   return (
     <>
       <CheckLoggedIn />
+      <AppUpdateChecker />
+      <QuickComposeBridge />
       <ToolSessionLifecycle />
       <Outlet />
     </>

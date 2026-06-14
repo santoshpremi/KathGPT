@@ -19,6 +19,31 @@ pub struct CatalogEntry {
 }
 
 pub const CATALOG: &[CatalogEntry] = &[
+    CatalogEntry {
+        name: "llama3.2:3b-q8",
+        display_name: "Llama 3.2 3B (Q8)",
+        description: "Higher-quality quantization for 16GB+ machines — sharper replies than Q4.",
+        tags: &["chat", "general", "quality"],
+        parameter_size: "3B",
+        quant: "Q8_0",
+        gguf_filename: "Llama-3.2-3B-Instruct-Q8_0.gguf",
+        download_url: "https://huggingface.co/bartowski/Llama-3.2-3B-Instruct-GGUF/resolve/main/Llama-3.2-3B-Instruct-Q8_0.gguf",
+        size_bytes: 3_420_000_000,
+        min_ram_gb: 12,
+    },
+    CatalogEntry {
+        name: "llama3.1:8b-q8",
+        display_name: "Llama 3.1 8B (Q8)",
+        description: "Best quality 8B pick when you have 16GB+ RAM.",
+        tags: &["chat", "reasoning", "quality", "meta"],
+        parameter_size: "8B",
+        quant: "Q8_0",
+        gguf_filename: "Meta-Llama-3.1-8B-Instruct-Q8_0.gguf",
+        download_url: "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q8_0.gguf",
+        size_bytes: 8_540_000_000,
+        min_ram_gb: 16,
+    },
+
     // -------------------------------------------------------------------------
     // 2–4 GB RAM  (1B – 4B)
     // -------------------------------------------------------------------------
@@ -285,4 +310,65 @@ pub fn search(query: &str) -> Vec<&'static CatalogEntry> {
                 || e.parameter_size.to_lowercase().contains(&q)
         })
         .collect()
+}
+
+/// Models that should run on a machine with the given effective RAM budget.
+pub fn compatible_with_ram(effective_ram_gb: u8) -> Vec<&'static CatalogEntry> {
+    CATALOG
+        .iter()
+        .filter(|e| e.min_ram_gb <= effective_ram_gb)
+        .collect()
+}
+
+/// Higher quant tiers are preferred when RAM allows multiple compatible picks.
+pub fn quant_rank(quant: &str) -> u8 {
+    match quant {
+        "Q8_0" | "Q8_0_K" | "Q8_K" => 4,
+        "Q6_K" => 3,
+        "Q5_K_M" | "Q5_K_S" => 2,
+        _ => 1,
+    }
+}
+
+/// Best default download for this machine — prefers the "recommended" tag, else highest quality that fits.
+pub fn recommended_for_ram(effective_ram_gb: u8) -> Option<&'static CatalogEntry> {
+    let mut fits: Vec<_> = CATALOG
+        .iter()
+        .filter(|e| e.min_ram_gb <= effective_ram_gb)
+        .collect();
+    if fits.is_empty() {
+        return CATALOG.first();
+    }
+
+    if let Some(entry) = fits
+        .iter()
+        .filter(|e| e.tags.contains(&"recommended"))
+        .max_by_key(|e| quant_rank(e.quant))
+    {
+        return Some(*entry);
+    }
+
+    fits.sort_by(|a, b| {
+        a.min_ram_gb
+            .cmp(&b.min_ram_gb)
+            .then(quant_rank(a.quant).cmp(&quant_rank(b.quant)))
+    });
+    fits.last().copied()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn recommended_picks_tagged_model_when_it_fits() {
+        let entry = recommended_for_ram(8).expect("8GB should match models");
+        assert_eq!(entry.name, "llama3.2:3b");
+    }
+
+    #[test]
+    fn compatible_filters_by_ram_tier() {
+        assert_eq!(compatible_with_ram(4).len(), 5);
+        assert!(compatible_with_ram(16).len() >= 20);
+    }
 }

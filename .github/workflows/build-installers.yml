@@ -31,8 +31,16 @@ jobs:
         include:
           - os: ubuntu-22.04
             platform: linux
+            args: ""
           - os: windows-latest
             platform: windows
+            args: ""
+          - os: macos-latest
+            platform: mac-arm
+            args: "--target aarch64-apple-darwin"
+          - os: macos-latest
+            platform: mac-intel
+            args: "--target x86_64-apple-darwin"
 
     runs-on: ${{ matrix.os }}
     env:
@@ -53,6 +61,14 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Add macOS Rust targets
+        if: startsWith(matrix.platform, 'mac-')
+        run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
+
       - name: Install Linux deps
         if: matrix.platform == 'linux'
         run: |
@@ -61,7 +77,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - run: pnpm tauri build
+      - run: pnpm tauri build ${{ matrix.args }}
 
       - name: Collect Linux installer
         if: matrix.platform == 'linux'
@@ -93,6 +109,20 @@ jobs:
           fi
           mkdir -p artifacts
           cp "$INSTALLER" "artifacts/$(basename "$INSTALLER")"
+
+      - name: Collect macOS installer
+        if: startsWith(matrix.platform, 'mac-')
+        shell: bash
+        run: |
+          set -euo pipefail
+          DMG=$(find src-tauri/target -name '*.dmg' | head -1)
+          if [ -z "$DMG" ]; then
+            echo "No DMG found"
+            find src-tauri/target -name '*.dmg' -o -name '*.app' | head -20 || true
+            exit 1
+          fi
+          mkdir -p artifacts
+          cp "$DMG" "artifacts/$(basename "$DMG")"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -134,6 +164,16 @@ jobs:
           )
           if windows:
               data["platforms"]["windows"] = windows[-1].name
+
+          mac_arm = sorted(downloads.glob("*aarch64*.dmg"))
+          if mac_arm:
+              data["platforms"]["mac-arm"] = mac_arm[-1].name
+
+          mac_intel = sorted(
+              [p for p in downloads.glob("*.dmg") if "aarch64" not in p.name]
+          )
+          if mac_intel:
+              data["platforms"]["mac-intel"] = mac_intel[-1].name
 
           manifest_path.write_text(json.dumps(data, indent=2) + "\n")
           PY

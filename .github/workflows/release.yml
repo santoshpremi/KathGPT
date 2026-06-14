@@ -54,6 +54,7 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=8192
       - name: Build Tauri bundles
         env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
@@ -85,11 +86,15 @@ jobs:
           path: artifacts
 
       - name: List installer artifacts
-        run: find artifacts -type f | head -50
+        run: find artifacts -type f | head -80
+
+      - name: Merge updater manifest
+        run: python3 scripts/merge-updater-manifest.py artifacts
 
       - uses: softprops/action-gh-release@v2
         with:
           files: |
+            latest.json
             artifacts/**/*.dmg
             artifacts/**/*.msi
             artifacts/**/*.exe
@@ -97,5 +102,8 @@ jobs:
             artifacts/**/*.deb
             artifacts/**/*.rpm
             artifacts/**/*.app.tar.gz
+            artifacts/**/*.tar.gz
+            artifacts/**/*.zip
+            artifacts/**/*.sig
           generate_release_notes: true
           fail_on_unmatched_files: false

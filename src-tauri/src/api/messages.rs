@@ -20,6 +20,7 @@ use crate::llm::{router, stream as llm_stream};
 use crate::llm::stream::StreamOptions;
 use crate::models::{SendMessageRequest, StreamDeltaEvent, StreamInitEvent};
 use crate::server::AppState;
+use crate::tokens;
 
 pub fn routes() -> Router<AppState> {
     Router::new()
@@ -174,6 +175,15 @@ async fn stream_message(
             .to_string(),
             content: llm_content,
         });
+    }
+
+    let context_window = tokens::context_window_for_model(&generation_model);
+    let (chat_messages, truncated_count) =
+        tokens::fit_messages_to_context(chat_messages, context_window, 4096);
+    if truncated_count > 0 {
+        tracing::info!(
+            "Truncated {truncated_count} older messages to fit {context_window} token context for {generation_model}"
+        );
     }
 
     let (event_tx, mut event_rx) = mpsc::unbounded_channel::<Result<Event, Infallible>>();

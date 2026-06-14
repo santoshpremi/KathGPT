@@ -12,21 +12,45 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "KathaGPT",
         "width": 1280,
         "height": 800,
         "minWidth": 900,
         "minHeight": 600,
         "resizable": true
+      },
+      {
+        "label": "quick-compose",
+        "title": "Quick Compose",
+        "url": "/quick-compose",
+        "width": 520,
+        "height": 440,
+        "minWidth": 420,
+        "minHeight": 320,
+        "visible": false,
+        "alwaysOnTop": true,
+        "resizable": true,
+        "skipTaskbar": true,
+        "center": true
       }
     ],
     "security": {
-      "csp": "default-src 'self' blob:; connect-src 'self' http://localhost:* http://127.0.0.1:* https://openrouter.ai https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com https://api.perplexity.ai; frame-src 'self' blob: http://127.0.0.1:* http://localhost:*; object-src 'self' blob: http://127.0.0.1:* http://localhost:*; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:"
+      "csp": "default-src 'self' blob:; connect-src 'self' http://localhost:* http://127.0.0.1:* https://github.com https://openrouter.ai https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com https://api.perplexity.ai; frame-src 'self' blob: http://127.0.0.1:* http://localhost:*; object-src 'self' blob: http://127.0.0.1:* http://localhost:*; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:"
+    }
+  },
+  "plugins": {
+    "updater": {
+      "endpoints": [
+        "https://github.com/santoshpremi/KathaGPT/releases/latest/download/latest.json"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEIzM0VFQTYwRkVFQ0QxNkYKUldSdjBleitZT28rczhjUVJKQVFlV0JqOHF6TnNodkZSenZQekxuVHBxc1h1U1dFTmpVejZKd1gK"
     }
   },
   "bundle": {
     "active": true,
     "targets": "all",
+    "createUpdaterArtifacts": true,
     "macOS": {
       "signingIdentity": "-",
       "hardenedRuntime": false,

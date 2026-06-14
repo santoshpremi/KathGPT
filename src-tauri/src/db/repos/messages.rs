@@ -88,9 +88,11 @@ fn row_to_message(
         .and_then(|s| serde_json::from_str(s).ok())
         .unwrap_or_default();
 
+    let content = row.1.clone();
+
     Message {
         id: row.0,
-        content: row.1,
+        content,
         created_at: row.2,
         from_ai: row.3 != 0,
         response_completed: Some(row.4 != 0),
@@ -102,7 +104,7 @@ fn row_to_message(
         artifact_version_id: None,
         cancelled: Some(row.8 != 0),
         error_code: None,
-        tokens: 0,
+        tokens: crate::tokens::estimate_tokens(&row.1),
         output_document_url: None,
         rag_sources: vec![],
     }
@@ -153,7 +155,7 @@ pub async fn insert_user_message(
         artifact_version_id: None,
         cancelled: Some(false),
         error_code: None,
-        tokens: 0,
+        tokens: crate::tokens::estimate_tokens(content),
         output_document_url: None,
         rag_sources: vec![],
     };
@@ -190,7 +192,7 @@ pub async fn insert_ai_message(
         artifact_version_id: None,
         cancelled: Some(false),
         error_code: None,
-        tokens: 0,
+        tokens: crate::tokens::estimate_tokens(content),
         output_document_url: None,
         rag_sources: vec![],
     };

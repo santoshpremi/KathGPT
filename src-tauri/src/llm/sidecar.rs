@@ -206,13 +206,7 @@ pub async fn ensure_running(model_name: &str) -> anyhow::Result<()> {
 
     // Context size — Llama 3.2 supports up to 128K, but we cap at a practical
     // value: 16K for larger models, 8K for small ones (fits in 4-8GB RAM with Metal).
-    let ctx_size = if model_name.contains("1b") || model_name.contains("1B") {
-        8192u32
-    } else if model_name.contains("3b") || model_name.contains("3B") {
-        16384
-    } else {
-        32768
-    };
+    let ctx_size = context_window_for(model_name);
 
     info!("Starting llama-server: model={model_name} ctx={ctx_size} port={SIDECAR_PORT}");
 
@@ -313,8 +307,23 @@ pub fn list_downloaded_models() -> Vec<String> {
         .collect()
 }
 
-/// Delete a downloaded model file.
-pub fn delete_model(model_name: &str) -> anyhow::Result<()> {
+/// Context window used when serving a local GGUF model.
+pub fn context_window_for(model_name: &str) -> u32 {
+    let lower = model_name.to_lowercase();
+    if lower.contains("1b") {
+        8192
+    } else if lower.contains("3b") {
+        16384
+    } else {
+        32768
+    }
+}
+
+/// Delete a downloaded model file. Stops the sidecar if this model is loaded.
+pub async fn delete_model(model_name: &str) -> anyhow::Result<()> {
+    if current_model().await.as_deref() == Some(model_name) {
+        stop().await;
+    }
     let path = model_path(&gguf_filename(model_name))?;
     if path.exists() {
         std::fs::remove_file(&path)?;

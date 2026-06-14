@@ -22,12 +22,19 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
       - name: Install Linux deps (Tauri/Rust)
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev
 
       - run: pnpm install --frozen-lockfile
+
+      - name: Pre-build Rust API server
+        run: cargo build --manifest-path src-tauri/Cargo.toml --features api-server-cli --example api-server
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
@@ -36,3 +43,4 @@ jobs:
         run: pnpm run test:e2e
         env:
           CI: true
+          KATHAGPT_MOCK_RAM_GB: "16"

@@ -31,6 +31,7 @@ import { DocumentChip } from "./sources/DocumentChip";
 import { CHAT_INPUT_ID } from "../../../lib/testIds";
 import { InlineModelSelector } from "./InlineModelSelector";
 import { ChatInputMenu } from "./ChatInputMenu";
+import { ContextTokenIndicator } from "./ContextTokenIndicator";
 
 export interface AttachedDocument {
   id: string;
@@ -410,6 +411,17 @@ export const ChatInput = React.forwardRef(
                   onChange={(e) => setInput(e.target.value)}
                   {...textAreaProps}
                 />
+
+                {(chosenModel ?? "automatic") && (
+                  <div className="px-3 pt-1">
+                    <ContextTokenIndicator
+                      model={chosenModel ?? "automatic"}
+                      chatTokens={chatTokens ?? 0}
+                      input={input}
+                      attachedDocuments={attachedDocuments}
+                    />
+                  </div>
+                )}
 
                 <div className="flex items-center justify-between gap-2 px-3 pb-3 pt-1">
                   <div className="flex min-w-0 flex-wrap items-center gap-1">

@@ -1,12 +1,19 @@
-import { Button, Card, Divider, Input, Option, Select, Typography } from "@mui/joy";
+import { Button, Card, Divider, Input, Option, Select, Switch, Typography } from "@mui/joy";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
+import { invoke } from "@tauri-apps/api/core";
 import { useModals } from "../router";
 import { exportData, importData } from "../lib/api/rust/workflows";
 import { rustFetch } from "../lib/api/rust/client";
 import { DEV_ORG_ID } from "../lib/local/seed";
 import { useTranslation } from "../lib/i18n";
+import {
+  getQuickComposeShortcutLabel,
+  isDesktopTauri,
+  isQuickComposeEnabled,
+  setQuickComposeEnabled,
+} from "../lib/tauri/quickCompose";
 
 export default function SettingsPage() {
   const { t } = useTranslation();
@@ -16,6 +23,10 @@ export default function SettingsPage() {
   const [importing, setImporting] = useState(false);
   const [locale, setLocale] = useState("en");
   const [defaultModel, setDefaultModel] = useState("gpt-4o-mini");
+  const [quickComposeEnabled, setQuickComposeEnabledState] = useState(
+    () => isQuickComposeEnabled(),
+  );
+  const showDesktopSettings = isDesktopTauri();
 
   const handleExport = async () => {
     setExporting(true);
@@ -92,6 +103,41 @@ export default function SettingsPage() {
         </div>
         <Button onClick={() => void saveProfile()}>Save profile</Button>
       </Card>
+
+      {showDesktopSettings && (
+        <Card className="!p-6">
+          <Typography level="title-lg" className="!mb-2">
+            {t("settings.quickCompose.title")}
+          </Typography>
+          <Typography level="body-sm" className="!mb-4 text-gray-500">
+            {t("settings.quickCompose.description")}
+          </Typography>
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <Typography level="body-md">
+                {t("settings.quickCompose.shortcut")}
+              </Typography>
+              <Typography level="body-sm" textColor="neutral.500">
+                {getQuickComposeShortcutLabel()}
+              </Typography>
+            </div>
+            <Switch
+              checked={quickComposeEnabled}
+              onChange={(event) => {
+                const enabled = event.target.checked;
+                setQuickComposeEnabledState(enabled);
+                setQuickComposeEnabled(enabled);
+                void invoke("sync_quick_compose_enabled", { enabled });
+                toast.success(
+                  enabled
+                    ? t("settings.quickCompose.enabledHint")
+                    : t("settings.quickCompose.disabledHint"),
+                );
+              }}
+            />
+          </div>
+        </Card>
+      )}
 
       <Card className="!p-6">
         <Typography level="title-lg" className="!mb-2">

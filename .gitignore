@@ -29,6 +29,7 @@ src-tauri/target/
 **/target/
 src-tauri/gen/
 src-tauri/WixTools/
+src-tauri/.tauri-updater.key
 
 # Generated app icon source
 app-icon.png
@@ -89,10 +90,6 @@ Desktop.ini
 # Package manager temp files
 _tmp_*
 .pnpm-store/
-
-# Large uncompressed demo recordings (README uses docs/demo.gif)
-docs/demo-original.gif
-docs/Kapture*.gif
 
 # Optional local overrides (uncomment if you use them)
 # .vscode/

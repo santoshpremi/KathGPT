@@ -16,6 +16,7 @@ export interface InstalledLocalModel {
   sizeBytes: number;
   parameterSize: string;
   quantization: string;
+  loaded: boolean;
 }
 
 export interface CatalogLocalModel {
@@ -28,6 +29,21 @@ export interface CatalogLocalModel {
   minRamGb: number;
   installed: boolean;
   downloading: boolean;
+  compatible: boolean;
+  recommended: boolean;
+  quant: string;
+}
+
+export type GpuHint = "apple_metal" | "cuda" | "cpu";
+
+export interface LocalHardwareProfile {
+  totalRamGb: number;
+  effectiveRamGb: number;
+  platform: string;
+  arch: string;
+  gpuHint: GpuHint;
+  recommendedModel?: string;
+  recommendedQuant?: string;
 }
 
 export type DownloadPhase =
@@ -52,6 +68,10 @@ export interface DownloadProgress {
 
 export function getLocalModelsStatus(): Promise<SidecarStatus> {
   return rustFetch("/local-models/status");
+}
+
+export function getLocalHardwareProfile(): Promise<LocalHardwareProfile> {
+  return rustFetch("/local-models/hardware");
 }
 
 export function getInstalledLocalModels(): Promise<InstalledLocalModel[]> {

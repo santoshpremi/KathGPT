@@ -164,7 +164,7 @@ mod tests {
     #[tokio::test]
     async fn create_list_delete_chat() {
         let pool = test_pool().await;
-        let chat = create(&pool, "chat_test_1", Some("Test Chat"))
+        let chat = create(&pool, "chat_test_1", Some("Test Chat"), None)
             .await
             .unwrap();
         assert_eq!(chat.id, "chat_test_1");
@@ -189,7 +189,7 @@ mod tests {
     #[tokio::test]
     async fn delete_empty_removes_chats_without_messages() {
         let pool = test_pool().await;
-        create(&pool, "empty_chat", None).await.unwrap();
+        create(&pool, "empty_chat", None, None).await.unwrap();
         assert_eq!(delete_empty(&pool).await.unwrap(), 1);
         assert!(get(&pool, "empty_chat").await.unwrap().is_none());
     }

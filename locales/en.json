@@ -545,7 +545,31 @@
       "metrics": "Metrics"
     },
     "apiKeys": "API Keys",
-    "addLocalModel": "Add Local Model"
+    "addLocalModel": "Add Local Model",
+    "quickCompose": {
+      "title": "Quick Compose",
+      "description": "Open a compact chat window from anywhere with a global shortcut, even when KathaGPT is in the tray.",
+      "shortcut": "Global shortcut",
+      "enabledHint": "Global shortcut enabled.",
+      "disabledHint": "Global shortcut disabled."
+    }
+  },
+  "quickCompose": {
+    "title": "Quick Compose",
+    "openInApp": "Open in KathaGPT",
+    "hint": "Press Esc to hide · Send a message to start a new chat"
+  },
+  "contextTokens": {
+    "remaining": "{{used}} / {{limit}} tokens · {{remaining}} remaining",
+    "overLimit": "{{used}} / {{limit}} tokens · over context limit",
+    "nearLimitHint": "You're close to the context limit. Older messages may be trimmed automatically when you send.",
+    "overLimitHint": "This message exceeds the model context window. Shorten your input or start a new chat."
+  },
+  "localModels": {
+    "deleteTitle": "Delete local model?",
+    "deleteMessage": "Remove {{name}} from disk (~{{size}} freed). This cannot be undone.",
+    "deleteLoadedWarning": "This model is currently loaded in the engine. It will be unloaded before deletion.",
+    "autoQuant": "Auto quant: {{quant}}"
   },
   "apiKeysModal": {
     "title": "API Keys",

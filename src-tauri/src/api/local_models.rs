@@ -10,12 +10,14 @@ use serde::{Deserialize, Serialize};
 use std::convert::Infallible;
 use std::time::Duration;
 
+use crate::hardware;
 use crate::llm::{model_catalog, model_dl, sidecar};
 use crate::server::AppState;
 
 pub fn routes() -> Router<AppState> {
     Router::new()
         .route("/local-models/status", get(get_status))
+        .route("/local-models/hardware", get(get_hardware))
         .route("/local-models/installed", get(get_installed))
         .route("/local-models/catalog", get(get_catalog))
         .route("/local-models/download", post(start_download))
@@ -45,6 +47,7 @@ pub struct InstalledModel {
     pub size_bytes: u64,
     pub parameter_size: String,
     pub quantization: String,
+    pub loaded: bool,
 }
 
 #[derive(Debug, Serialize)]
@@ -60,6 +63,11 @@ pub struct CatalogModel {
     pub installed: bool,
     /// true if a download job is currently running for this model
     pub downloading: bool,
+    /// Fits the detected machine RAM budget
+    pub compatible: bool,
+    /// Suggested starting model for this machine
+    pub recommended: bool,
+    pub quant: String,
 }
 
 // ---------------------------------------------------------------------------
@@ -96,8 +104,13 @@ async fn get_status() -> impl IntoResponse {
     })
 }
 
+async fn get_hardware() -> impl IntoResponse {
+    Json(hardware::detect())
+}
+
 async fn get_installed() -> impl IntoResponse {
     let downloaded = sidecar::list_downloaded_models();
+    let loaded = sidecar::current_model().await;
     let models: Vec<InstalledModel> = downloaded
         .iter()
         .map(|name| {
@@ -112,6 +125,7 @@ async fn get_installed() -> impl IntoResponse {
                     .map(|e| e.parameter_size.to_string())
                     .unwrap_or_default(),
                 quantization: entry.map(|e| e.quant.to_string()).unwrap_or_default(),
+                loaded: loaded.as_deref() == Some(name.as_str()),
             }
         })
         .collect();
@@ -126,6 +140,9 @@ async fn get_catalog(Query(query): Query<CatalogQuery>) -> impl IntoResponse {
         .map(|p| p.model_name)
         .collect();
 
+    let hw = hardware::detect();
+    let recommended_name = hw.recommended_model.as_deref();
+
     let entries = model_catalog::search(&query.search);
     let models: Vec<CatalogModel> = entries
         .iter()
@@ -139,6 +156,9 @@ async fn get_catalog(Query(query): Query<CatalogQuery>) -> impl IntoResponse {
             min_ram_gb: e.min_ram_gb,
             installed: downloaded.contains(&e.name.to_string()),
             downloading: in_progress.contains(&e.name.to_string()),
+            compatible: e.min_ram_gb <= hw.effective_ram_gb,
+            recommended: recommended_name == Some(e.name),
+            quant: e.quant.to_string(),
         })
         .collect();
     (StatusCode::OK, Json(models))
@@ -191,7 +211,7 @@ async fn delete_model(Json(body): Json<DeleteRequest>) -> impl IntoResponse {
             .into_response();
     }
 
-    match sidecar::delete_model(name) {
+    match sidecar::delete_model(name).await {
         Ok(()) => (StatusCode::OK, Json(serde_json::json!({ "ok": true }))).into_response(),
         Err(err) => (
             StatusCode::BAD_REQUEST,
